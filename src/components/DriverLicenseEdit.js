@@ -1,0 +1,283 @@
+import React, { useState, useEffect } from 'react'
+import { PropTypes } from 'prop-types'
+import axios from 'axios'
+import { CCol, CRow, CCard, CCardBody, CFormInput, CButton } from '@coreui/react'
+
+const DriverLicenseEdit = (props) => {
+  const [driverLicenseData, setDriverLicenseData] = useState()
+  const [disableButton, setDisableButtonState] = useState(true)
+  const [licenseNumber, setLicenseNumber] = useState('')
+  const [licenseExpirationDate, setLicenseExpirationDate] = useState('')
+  const [insuranceExpirationDate, setInsuranceExpirationDate] = useState('')
+  const [licenseFrontImage, setLicenseFrontImage] = useState('')
+  const [licenseBackImage, setLicenseBackImage] = useState('')
+  const [selfieWithDL, setSelfieWithDL] = useState('')
+  const [insuranceImage, setInsuranceImage] = useState('')
+  const [licenseFrontImageURL, setLicenseFrontImageURL] = useState('')
+  const [licenseBackImageURL, setLicenseBackImageURL] = useState('')
+  const [selfieWithDLURL, setSelfieWithDLURL] = useState('')
+  const [insuranceImageURL, setInsuranceImageURL] = useState('')
+
+  const config = {
+    headers: {
+      Authorization:
+        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NTYwYjZiNjI4OTA5ZTc1YTcwYmY3YSIsImlhdCI6MTY4MzUzODQwNiwiZXhwIjoxNjkyMTc4NDA2fQ.VmRUeMareWD8lmwaqdQqrsMblrVjNUVGc_JQeiLBAOI',
+    },
+  }
+  useEffect(() => {
+    var url = 'http://192.168.29.32:4000/api/v1/admin-driver-license-list/' + props.driverId
+    axios.get(url).then((response) => {
+      console.log(response.data)
+      setData(response.data.data[0])
+    })
+  }, [])
+
+  const setData = (record) => {
+    setDriverLicenseData(record)
+    setLicenseNumber(record.licenseInformation.licenseNumber)
+    setLicenseExpirationDate(record.licenseInformation.licenseExpirationDate.split('T')[0])
+    setInsuranceExpirationDate(record.vehicleInsurance.insuranceExpirationDate.split('T')[0])
+    setLicenseFrontImageURL(record.licenseInformation.licenseFrontImage)
+    setLicenseBackImageURL(record.licenseInformation.licenseBackImage)
+    setSelfieWithDLURL(record.licenseInformation.selfieWithDL)
+    setInsuranceImageURL(record.vehicleInsurance.insuranceImage)
+    console.log('driverLicenseData', JSON.stringify(record))
+  }
+  const onLicenseNumberChange = (event) => {
+    console.log('onLicenseNumberChange event:::===>>' + JSON.stringify(event.target.value))
+    setDisableButtonState(false)
+    setLicenseNumber(event.target.value)
+  }
+  const onLicenseExpirationDate = (event) => {
+    console.log('onLicenseExpirationDate event:::===>>' + JSON.stringify(event.target.value))
+    setDisableButtonState(false)
+    setLicenseExpirationDate(event.target.value)
+  }
+  const onlicenseFrontImageUpload = (event) => {
+    console.log('onlicenseFrontImageUpload event:::===>>' + event.target.files[0])
+    setDisableButtonState(false)
+    setLicenseFrontImageURL()
+    const data = new FileReader()
+    data.addEventListener('load', () => {
+      setLicenseFrontImage(data.result)
+    })
+    data.readAsDataURL(event.target.files[0])
+  }
+  const onlicenseBackImageUpload = (event) => {
+    console.log('onlicenseBackImageUpload event:::===>>' + event.target.files[0])
+    setDisableButtonState(false)
+    setLicenseBackImageURL()
+    const data = new FileReader()
+    data.addEventListener('load', () => {
+      setLicenseBackImage(data.result)
+    })
+    data.readAsDataURL(event.target.files[0])
+  }
+  const onInsuranceExpirationDateChange = (event) => {
+    console.log('onInsuranceExpDateChange event:::===>>' + JSON.stringify(event.target.value))
+    setDisableButtonState(false)
+    setInsuranceExpirationDate(event.target.value)
+  }
+  const onSelfieWithDLUpload = (event) => {
+    console.log('onSelfieWithDLUpload event:::===>>' + event.target.files[0])
+    setDisableButtonState(false)
+    setSelfieWithDLURL()
+    const data = new FileReader()
+    data.addEventListener('load', () => {
+      setSelfieWithDL(data.result)
+    })
+    data.readAsDataURL(event.target.files[0])
+  }
+  const onInsuranceImageUpload = (event) => {
+    console.log('onInsuranceImageUpload event:::===>>' + event.target.files[0])
+    setDisableButtonState(false)
+    setInsuranceImageURL()
+    const data = new FileReader()
+    data.addEventListener('load', () => {
+      setInsuranceImage(data.result)
+    })
+    data.readAsDataURL(event.target.files[0])
+  }
+  const onUpdateLicenseDetailsClick = () => {
+    console.log('onUpdateLicenseDetailsClick :::===>>')
+    if (window.confirm('Are you sure to update license details !')) {
+      document.getElementById('onOkClick').style.display = 'none'
+      document.getElementById('onCancleClick').style.display = 'none'
+
+      let formData = new FormData()
+      formData.append('driverId', props.driverId)
+
+      if (licenseNumber !== '') {
+        formData.append('licenseNumber', licenseNumber)
+      }
+      if (licenseExpirationDate !== '') {
+        formData.append('licenseExpirationDate', licenseExpirationDate)
+      }
+      if (insuranceExpirationDate !== '') {
+        formData.append('insuranceExpirationDate', insuranceExpirationDate)
+      }
+      console.log(licenseFrontImage)
+      console.log(licenseFrontImageURL)
+
+      if (licenseFrontImage !== '') {
+        console.log('licenseFrontImage if' + licenseFrontImage)
+        formData.append('licenseFrontImage', licenseFrontImage)
+      } else if (licenseFrontImageURL !== '') {
+        console.log('licenseFrontImageURL if esle' + licenseFrontImageURL)
+        formData.append('licenseFrontImageURL', licenseFrontImageURL)
+      }
+      if (licenseBackImage !== '') {
+        formData.append('licenseBackImage', licenseBackImage)
+      } else if (licenseBackImageURL !== '') {
+        formData.append('licenseBackImageURL', licenseBackImageURL)
+      }
+      if (selfieWithDL !== '') {
+        formData.append('selfieWithDL', selfieWithDL)
+      } else if (selfieWithDLURL !== '') {
+        formData.append('selfieWithDLURL', selfieWithDLURL)
+      }
+      if (insuranceImage !== '') {
+        formData.append('insuranceImage', insuranceImage)
+      } else if (insuranceImageURL !== '') {
+        formData.append('insuranceImageURL', insuranceImageURL)
+      }
+
+      const headers = {
+        'Content-Type': 'multipart/form-data;',
+      }
+
+      axios
+        .put('http://192.168.29.32:4000/api/v1/admin-driver-license-update', formData, {
+          headers: headers,
+        })
+        .then((response) => {
+          console.log(response.data)
+          props.closePopup(false)
+        })
+    } else {
+      document.getElementById('onOkClick').style.display = 'none'
+      document.getElementById('onCancleClick').style.display = 'none'
+    }
+  }
+
+  return (
+    <div>
+      <CRow>
+        <CCol sm={6}>
+          <CCard>
+            <CCardBody>
+              <CFormInput
+                type="text"
+                id="Name"
+                label="License Number"
+                value={licenseNumber}
+                onChange={onLicenseNumberChange}
+              />
+              <CFormInput
+                type="date"
+                id="Name"
+                label="License Expiration Date"
+                value={licenseExpirationDate}
+                onChange={onLicenseExpirationDate}
+              />
+              <CFormInput
+                type="file"
+                id="formFile"
+                label="license Front Image"
+                onChange={onlicenseFrontImageUpload}
+              />
+              <img
+                style={{ margin: '10px' }}
+                width={200}
+                height={200}
+                className="image"
+                src={licenseFrontImage ? licenseFrontImage : licenseFrontImageURL}
+                alt=""
+              />
+
+              <CFormInput
+                type="file"
+                id="formFile"
+                label="license Back Image"
+                onChange={onlicenseBackImageUpload}
+              />
+              <img
+                style={{ margin: '10px' }}
+                width={200}
+                height={200}
+                className="image"
+                src={licenseBackImage ? licenseBackImage : licenseBackImageURL}
+                alt=""
+              />
+            </CCardBody>
+          </CCard>
+        </CCol>
+        <CCol sm={6}>
+          <CCard>
+            <CCardBody>
+              <CFormInput
+                type="date"
+                id="Name"
+                label="Insurance Expiration Date"
+                value={insuranceExpirationDate}
+                onChange={onInsuranceExpirationDateChange}
+              />
+              <CFormInput
+                type="file"
+                id="formFile"
+                label="Selfie With DL"
+                onChange={onSelfieWithDLUpload}
+              />
+              <img
+                style={{ margin: '10px' }}
+                width={200}
+                height={200}
+                className="image"
+                src={selfieWithDL ? selfieWithDL : selfieWithDLURL}
+                alt=""
+              />
+              <CFormInput
+                type="file"
+                id="formFile"
+                label="Insurance Image"
+                onChange={onInsuranceImageUpload}
+              />
+              <img
+                style={{ margin: '10px' }}
+                width={200}
+                height={200}
+                className="image"
+                src={insuranceImage ? insuranceImage : insuranceImageURL}
+                alt=""
+              />
+            </CCardBody>
+          </CCard>
+        </CCol>
+        <div className="text-center">
+          <CButton
+            style={{ margin: '10px' }}
+            color="primary"
+            variant="outline"
+            className="me-3"
+            disabled={disableButton}
+            onClick={() => onUpdateLicenseDetailsClick()}
+          >
+            Update License Details
+          </CButton>
+        </div>
+      </CRow>
+      <p id="onOkClick" style={{ display: 'none' }}>
+        Ok
+      </p>
+      <p id="onCancleClick" style={{ display: 'none' }}>
+        Cancle
+      </p>
+    </div>
+  )
+}
+DriverLicenseEdit.propTypes = {
+  driverId: PropTypes.string,
+  closePopup: PropTypes.func,
+}
+
+export default React.memo(DriverLicenseEdit)
