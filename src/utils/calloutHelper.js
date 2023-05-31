@@ -65,12 +65,13 @@ const getCouponsData = async (method, url) => {
 }
 
 const addNewCoupon = async (method, url, payload) => {
-  console.log('payload>>>>>>' + payload)
-
   const result = await axios({
     method: method,
     url: url,
     data: payload,
+    headers: {
+      'Content-type': 'application/x-www-form-urlencoded',
+    },
   })
     .then((response) => {
       console.log('addNewCoupon response :::====>>' + JSON.stringify(response))
@@ -83,4 +84,31 @@ const addNewCoupon = async (method, url, payload) => {
   return result
 }
 
-export { getDriversData, getRideFaresData, getRidersData, getCouponsData, addNewCoupon }
+const deleteCoupon = async (method, url, payload) => {
+  const result = await axios({
+    method: method,
+    url: url,
+    data: payload,
+    headers: {
+      'Content-type': 'application/x-www-form-urlencoded',
+    },
+  })
+    .then((response) => {
+      console.log('deleteCoupon response :::====>>' + JSON.stringify(response))
+      return response
+    })
+    .catch((error) => {
+      console.log('deleteCoupon error :::====>>' + JSON.stringify(error))
+      return error
+    })
+  return result
+}
+
+export {
+  getDriversData,
+  getRideFaresData,
+  getRidersData,
+  getCouponsData,
+  addNewCoupon,
+  deleteCoupon,
+}

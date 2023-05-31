@@ -24,54 +24,22 @@ const AddCoupon = (props) => {
   }
 
   const onAddCouponClick = async () => {
-    let details = {
-      name: 'couponName',
+    let payload = {
+      name: couponName,
       expireyDate: couponExpireyDate,
       discountPercentage: 20,
     }
 
     let url = 'http://192.168.29.32:4000/api/v1/coupon'
 
-    const usersName = details;
-
-    /*config.headers.ContentType =
-      'application/x-www-form-urlencoded;charset=utf-8';*/
-
-
-      const config = {
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        }
-      }
-    const result = await axios.post(url,config,  usersName);
-    console.log(result)
-
-
-    
-
-    //let response = await addNewCoupon('POST', url, JSON.stringify(details))
-    //console.log(response)
-
-    /* const headers = {
-    "Access-Control-Allow-Origin": "*",
-    "Content-Type": "application/json",
-    //"Access-Control-Allow-Credentials": "true",
-    "Access-Control-Allow-Methods": "GET,HEAD,OPTIONS,POST,PUT",
-    "Access-Control-Allow-Headers": "Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers",
-    }
-
-    
-    
-    let url = 'http://192.168.43.32:4000/api/v1/coupon'
-    axios
-    .post(url, details, {
-      headers: headers,
-    })
-    .then((response) => {
-      console.log(response)
+    const response = await addNewCoupon('post', url, payload)
+    if (response !== undefined && response.status) {
+      console.log(JSON.stringify( response))
       props.closePopup(false)
       props.onRefresh()
-    })*/
+
+    }    
+
   }
 
   return (

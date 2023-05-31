@@ -52,7 +52,7 @@ const DriverDetailsEdit = (props) => {
         })
         .then((response) => {
           console.log(response.data)
-          props.onRefresh(response.data.data)
+          props.onRefresh()
           props.closePopup(false)
         })
     } else {

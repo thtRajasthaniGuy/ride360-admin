@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { PropTypes } from 'prop-types'
 import axios from 'axios'
 import { CForm, CRow, CCol, CFormInput, CButton } from '@coreui/react'
+import { deleteCoupon } from 'src/utils/calloutHelper'
 
 const EditViewCoupon = (props) => {
   const [disableButton, setDisableButtonState] = useState(true)
@@ -26,41 +27,17 @@ const EditViewCoupon = (props) => {
 
   const onSaveCouponClick = () => {}
 
-  const onDeleteCouponClick = () => {
-    /*var details = {
+  const onDeleteCouponClick = async () => {
+    let payload = {
       name: couponName,
     }
-    var formBody = []
-    for (var property in details) {
-      var encodedKey = encodeURIComponent(property)
-      var encodedValue = encodeURIComponent(details[property])
-      formBody.push(encodedKey + '=' + encodedValue)
-    }
-    formBody = formBody.join('&')*/
-
-   /* const headers = {
-      'Content-Type': 'application/json',
-      'Access-Control-Allow-Credentials': 'true',
-      'Access-Control-Allow-Methods': 'GET,HEAD,OPTIONS,POST,PUT',
-      'Access-Control-Allow-Headers':
-        'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers',
-    }
-    let url = 'http://192.168.43.32:4000/api/v1/coupon'
-    axios
-      .delete(
-        url,
-        JSON.stringify({
-          name: 'amit',
-        }),
-        {
-          headers: headers,
-        },
-      )
-      .then((response) => {
-        console.log(response.data)
-        //props.closePopup(false)
-        //props.onRefresh()
-      })*/
+    let url = 'http://192.168.29.32:4000/api/v1/coupon'
+    const response = await deleteCoupon('delete', url, payload)
+    if (response !== undefined && response.status) {
+      console.log(JSON.stringify( response))
+      props.closePopup(false)
+      props.onRefresh()      
+    }    
   }
 
   return (

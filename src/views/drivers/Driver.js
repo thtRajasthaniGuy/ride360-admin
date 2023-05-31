@@ -63,7 +63,7 @@ const Driver = () => {
 
   useEffect(() => {
     getDrivers()
-  }, [])
+  }, [refreshCmpData])
 
   const getDrivers = async () => {
     let name = nameSearch ? nameSearch : 'null'
@@ -72,6 +72,7 @@ const Driver = () => {
     let url =
       'http://localhost:4000/api/v1/admin-driver-filter-List/' + name + '/' + email + '/' + phone
 
+      console.log('url>>' +url)
     let response = await getDriversData('GET', url)
     if (response !== undefined && response.status) {
       setData(response.data.data)
@@ -120,25 +121,16 @@ const Driver = () => {
   }
 
   const refreshData = (updatedDriversData) => {
-    var tempData = tempDriversData
-    tempData.forEach((record) => {
-      if (record._id === updatedDriversData._id) {
-        Object.entries(updatedDriversData).forEach(([key, value]) => {
-          if (key == 'dob') {
-            record[key] = value.split('T')[0]
-          } else {
-            record[key] = value
-          }
-        })
-      }
-    })
-    setDriversData(tempDriversData.slice(startIndex, startIndex + recordPerPage))
+    setRefreshData(true)
   }
 
   const onEditViewClick = (obj) => {
     console.log('onEditViewClick obj ::::===>>' + obj)
     setActionPopup(true)
     setSelectedRowData(obj)
+    setNameSearch('')
+    setEmailSearch('')
+    setPhoneSearch('')
   }
   const onNextButtonClick = (tempPageIndex, totalcount, tempCurrentPage) => {
     setStartIndex(tempPageIndex)
@@ -166,7 +158,8 @@ const Driver = () => {
     setStartIndex(0)
     setCurrentPage(1)
     setTotalPages(0)
-    getDriversData()
+    getDrivers()
+   // getDriversData()
   }
   const onResetClick = () => {
     console.log('onResetClick')

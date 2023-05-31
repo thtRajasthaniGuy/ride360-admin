@@ -43,18 +43,18 @@ const Coupon = () => {
   const [startIndex, setStartIndex] = useState(0)
   const [openAddCouponPopup, setOpenAddCouponPopup] = useState(false)
   const [openEditViewCouponPopup, setOpenEditViewCouponPopup] = useState(false)
+  const [refreshCouponData, setRefreshCouponData] = useState(false)
 
   const refreshData = () => {
-    console.log('refreshData>>>>')
+    setRefreshCouponData(true)
   }
 
   useEffect(() => {
     getCoupons()
-  }, [])
+  }, [refreshCouponData])
 
   const getCoupons = async () => {
     let url = 'http://localhost:4000/api/v1/coupon'
-
     let response = await getCouponsData('GET', url)
     if (response !== undefined && response.status) {
       setData(response.data.data)
@@ -109,16 +109,6 @@ const Coupon = () => {
     setCouponData(tempCouponData.slice(tempPageIndex, totalcount))
     setCurrentPage(currentPage)
   }
-
-  /*const onNextButtonClick = (tempPageIndex, totalcount) => {
-    setStartIndex(tempPageIndex)
-
-    setCouponData(tempCouponData.slice(tempPageIndex, totalcount))
-  }
-  const onPreviousButtonClick = (tempPageIndex, totalcount) => {
-    setStartIndex(tempPageIndex)
-    setCouponData(tempCouponData.slice(tempPageIndex, totalcount))
-  }*/
 
   return (
     <div className="card">
