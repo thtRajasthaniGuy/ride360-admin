@@ -103,7 +103,7 @@ const Rider = () => {
       count++
     })
     setTotalPages(records.length / recordPerPage)
-    setRidersData(records.slice(startIndex, startIndex + recordPerPage))
+    setRidersData(records.slice(0, 0 + recordPerPage))
     setTempRidersData(records)
   }
   const onEditViewClick = (obj) => {
@@ -128,31 +128,31 @@ const Rider = () => {
     setDisableButtonState(false)
   }
   const onSearchClick = () => {
-    console.log('here' + nameSearch)
-    let tempRiders = ridersData.filter((item) => {
-      if (nameSearch !== '' && item.name.toLowerCase().includes(nameSearch.toLowerCase())) {
-        return item
-      }
-      if (emailSearch !== '' && item.email.toLowerCase().includes(emailSearch.toLowerCase())) {
-        return item
-      }
-      if (
-        phoneSearch !== '' &&
-        item.phoneNumber.toString().toLowerCase().includes(phoneSearch.toLowerCase())
-      ) {
-        return item
+
+    setStartIndex(0)
+    setCurrentPage(1)
+    setTotalPages(0)
+    let name = nameSearch ? nameSearch : 'null'
+    let email = emailSearch ? emailSearch : 'null'
+    let phone = phoneSearch ? phoneSearch : 'null'
+    let url = 'http://localhost:4000/api/v1/admin-rider-filter-list/'+ name + '/' + email + '/' + phone
+    axios.get(url)
+    .then((response) => {
+      console.log(response.data)
+      console.log(response.status)
+      if(response.status){        
+        console.log(response.data.data)
+        setData(response.data.data)
       }
     })
-    setRidersData(tempRiders)
+
   }
   const onResetClick = () => {
-    console.log('onResetClick')
-
     setNameSearch('')
     setEmailSearch('')
     setPhoneSearch('')
     setDisableButtonState(true)
-    setRidersData(tempRidersData.slice(startIndex, startIndex + recordPerPage))
+    getRiders()
   }
   const onStatusChange = (event) => {
     console.log(event.target.value)
