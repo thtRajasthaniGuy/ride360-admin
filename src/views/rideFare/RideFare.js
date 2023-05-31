@@ -140,25 +140,23 @@ const RideFare = () => {
     }
   }
 
-  const onSearchClick = () => {
-    let tempRideFareData = rideFareData.filter((item) => {
-      console.log(item)
-      if (stateSearch !== '' && item.state.includes(stateSearch)) {
-        console.log(item.state)
-        return item
-      }
-      if (citySearch !== '' && item.city.includes(citySearch)) {
-        console.log(item.city)
-        return item
+  const onSearchClick = async () => {
+
+    let url = 'http://localhost:4000/api/v1/ride-fare-list/'+ stateSearch + '/' + citySearch
+    axios.get(url)
+    .then((response) => {
+      console.log(response.data)
+      if(response.status){
+        setData(response.data.data)
       }
     })
-    setRideFareData(tempRideFareData)
+      
   }
   const onResetClick = () => {
     setStateSearch('')
     setCitySearch('')
     setDisableButtonState(true)
-    setRideFareData(tempRideFareData.slice(startIndex, startIndex + recordPerPage))
+    getRideFares()
   }
   const onAddNewRideFareClick = () => {
     setOpenAddNewRideFarePopup(true)

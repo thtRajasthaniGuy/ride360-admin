@@ -46,7 +46,7 @@ const Coupon = () => {
   const [refreshCouponData, setRefreshCouponData] = useState(false)
 
   const refreshData = () => {
-    setRefreshCouponData(true)
+    setRefreshCouponData(!refreshCouponData)
   }
 
   useEffect(() => {
