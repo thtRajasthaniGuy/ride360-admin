@@ -25,7 +25,7 @@ const DriverLicenseEdit = (props) => {
     },
   }
   useEffect(() => {
-    var url = 'http://192.168.29.32:4000/api/v1/admin-driver-license-list/' + props.driverId
+    var url = 'http://localhost:4000/api/v1/admin-driver-license-list/' + props.driverId
     axios.get(url).then((response) => {
       console.log(response.data)
       setData(response.data.data[0])
@@ -172,6 +172,7 @@ const DriverLicenseEdit = (props) => {
                 label="License Number"
                 value={licenseNumber}
                 onChange={onLicenseNumberChange}
+                disabled={props.isAccountApprove}
               />
               <CFormInput
                 type="date"
@@ -179,12 +180,14 @@ const DriverLicenseEdit = (props) => {
                 label="License Expiration Date"
                 value={licenseExpirationDate}
                 onChange={onLicenseExpirationDate}
+                disabled={props.isAccountApprove}
               />
               <CFormInput
                 type="file"
                 id="formFile"
                 label="license Front Image"
                 onChange={onlicenseFrontImageUpload}
+                disabled={props.isAccountApprove}
               />
               <img
                 style={{ margin: '10px' }}
@@ -200,6 +203,7 @@ const DriverLicenseEdit = (props) => {
                 id="formFile"
                 label="license Back Image"
                 onChange={onlicenseBackImageUpload}
+                disabled={props.isAccountApprove}
               />
               <img
                 style={{ margin: '10px' }}
@@ -221,12 +225,14 @@ const DriverLicenseEdit = (props) => {
                 label="Insurance Expiration Date"
                 value={insuranceExpirationDate}
                 onChange={onInsuranceExpirationDateChange}
+                disabled={props.isAccountApprove}
               />
               <CFormInput
                 type="file"
                 id="formFile"
                 label="Selfie With DL"
                 onChange={onSelfieWithDLUpload}
+                disabled={props.isAccountApprove}
               />
               <img
                 style={{ margin: '10px' }}
@@ -241,6 +247,7 @@ const DriverLicenseEdit = (props) => {
                 id="formFile"
                 label="Insurance Image"
                 onChange={onInsuranceImageUpload}
+                disabled={props.isAccountApprove}
               />
               <img
                 style={{ margin: '10px' }}
@@ -254,16 +261,18 @@ const DriverLicenseEdit = (props) => {
           </CCard>
         </CCol>
         <div className="text-center">
-          <CButton
-            style={{ margin: '10px' }}
-            color="primary"
-            variant="outline"
-            className="me-3"
-            disabled={disableButton}
-            onClick={() => onUpdateLicenseDetailsClick()}
-          >
-            Update License Details
-          </CButton>
+          {props.isAccountApprove ? null : (
+            <CButton
+              style={{ margin: '10px' }}
+              color="primary"
+              variant="outline"
+              className="me-3"
+              disabled={disableButton}
+              onClick={() => onUpdateLicenseDetailsClick()}
+            >
+              Update License Details
+            </CButton>
+          )}
         </div>
       </CRow>
       <p id="onOkClick" style={{ display: 'none' }}>
@@ -278,6 +287,7 @@ const DriverLicenseEdit = (props) => {
 DriverLicenseEdit.propTypes = {
   driverId: PropTypes.string,
   closePopup: PropTypes.func,
+  isAccountApprove: PropTypes.bool,
 }
 
 export default React.memo(DriverLicenseEdit)

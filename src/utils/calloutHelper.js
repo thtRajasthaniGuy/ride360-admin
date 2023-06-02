@@ -104,6 +104,58 @@ const deleteCoupon = async (method, url, payload) => {
   return result
 }
 
+const getDriverLicenseData = async (method, url) => {
+  const result = await axios({
+    method: method,
+    url: url,
+  })
+    .then((response) => {
+      console.log('getDriverLicenseData response :::====>>' + JSON.stringify(response))
+      return response
+    })
+    .catch((error) => {
+      console.log('getDriverLicenseData error :::====>>' + JSON.stringify(error))
+      return error
+    })
+  return result
+}
+
+const getDriverVehicleData = async (method, url) => {
+  const result = await axios({
+    method: method,
+    url: url,
+  })
+    .then((response) => {
+      console.log('getDriverVehicleData response :::====>>' + JSON.stringify(response))
+      return response
+    })
+    .catch((error) => {
+      console.log('getDriverVehicleData error :::====>>' + JSON.stringify(error))
+      return error
+    })
+  return result
+}
+
+const updateDriverAccountStatus = async (method, url, payload) => {
+  const result = await axios({
+    method: method,
+    url: url,
+    data: payload,
+    headers: {
+      'Content-type': 'application/x-www-form-urlencoded',
+    },
+  })
+    .then((response) => {
+      console.log('updateDriverAccountStatus response :::====>>' + JSON.stringify(response))
+      return response
+    })
+    .catch((error) => {
+      console.log('updateDriverAccountStatus error :::====>>' + JSON.stringify(error))
+      return error
+    })
+  return result
+}
+
 export {
   getDriversData,
   getRideFaresData,
@@ -111,4 +163,7 @@ export {
   getCouponsData,
   addNewCoupon,
   deleteCoupon,
+  getDriverLicenseData,
+  getDriverVehicleData,
+  updateDriverAccountStatus,
 }

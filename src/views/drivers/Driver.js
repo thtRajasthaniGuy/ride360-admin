@@ -4,6 +4,7 @@ import { DataTable } from 'src/components'
 import { DriverDetailsEdit } from 'src/components'
 import { DriverVehicleEdit } from 'src/components'
 import { DriverLicenseEdit } from 'src/components'
+import { DriverApprove } from 'src/components'
 import { Pagination } from 'src/components'
 import { CCardHeader, CNavbar, CContainer, CNavbarBrand, CModalTitle } from '@coreui/react'
 import { CForm, CFormInput, CButton, CFormSelect, CModal, CModalHeader } from '@coreui/react'
@@ -37,8 +38,23 @@ const columns = [
     _props: { scope: 'col' },
   },
   {
+    key: 'totalkilometer',
+    label: 'Total kilometer',
+    _props: { scope: 'col' },
+  },
+  {
+    key: 'rating',
+    label: 'Rating',
+    _props: { scope: 'col' },
+  },
+  {
     key: 'action',
     label: 'Action',
+    _props: { scope: 'col' },
+  },
+  {
+    key: 'profileApprove',
+    label: 'Profile Approve',
     _props: { scope: 'col' },
   },
 ]
@@ -59,6 +75,7 @@ const Driver = () => {
   const [openEditDetailsPopup, setEditDetailsPopup] = useState(false)
   const [openEditLicensePopup, setEditLicensePopup] = useState(false)
   const [openEditVehiclePopup, setEditVehiclePopup] = useState(false)
+  const [openDriverApprovePopup, setOpenDriverApprovePopup] = useState(false)
   const [refreshCmpData, setRefreshData] = useState(false)
 
   useEffect(() => {
@@ -71,8 +88,6 @@ const Driver = () => {
     let phone = phoneSearch ? phoneSearch : 'null'
     let url =
       'http://localhost:4000/api/v1/admin-driver-filter-List/' + name + '/' + email + '/' + phone
-
-      console.log('url>>' +url)
     let response = await getDriversData('GET', url)
     if (response !== undefined && response.status) {
       setData(response.data.data)
@@ -85,6 +100,18 @@ const Driver = () => {
       record.sno = count
       record.dob = record.dob.split('T')[0]
       record._props = { color: getColor(record.accountStatus) }
+      record.profileApprove = (
+        <CButton
+          type="submit"
+          className="btn btn-outline-success"
+          color="primary"
+          variant="outline"
+          //disabled={record.accountStatus !== 'pending'? true : false}
+          onClick={() => onDriverApproveClick(record)}
+        >
+          Profile Approve
+        </CButton>
+      )
       record.action = (
         <CButton
           type="submit"
@@ -120,8 +147,12 @@ const Driver = () => {
     }
   }
 
-  const refreshData = (updatedDriversData) => {
-    setRefreshData(true)
+  const refreshData = () => {
+    setRefreshData(!refreshCmpData)
+  }
+  const onDriverApproveClick = (obj) => {
+    setOpenDriverApprovePopup(true)
+    setSelectedRowData(obj)
   }
 
   const onEditViewClick = (obj) => {
@@ -159,7 +190,6 @@ const Driver = () => {
     setCurrentPage(1)
     setTotalPages(0)
     getDrivers()
-   // getDriversData()
   }
   const onResetClick = () => {
     console.log('onResetClick')
@@ -307,6 +337,7 @@ const Driver = () => {
             selectedRowData={selectedRowData}
             closePopup={setEditDetailsPopup}
             onRefresh={refreshData}
+            isAccountApprove={false}
           />
         </CModalBody>
         <CModalFooter></CModalFooter>
@@ -320,6 +351,7 @@ const Driver = () => {
           <DriverLicenseEdit
             driverId={selectedRowData?.phoneNumber}
             closePopup={setEditLicensePopup}
+            isAccountApprove={false}
           />
         </CModalBody>
         <CModalFooter></CModalFooter>
@@ -333,6 +365,25 @@ const Driver = () => {
           <DriverVehicleEdit
             driverId={selectedRowData?.phoneNumber}
             closePopup={setEditVehiclePopup}
+            isAccountApprove={false}
+          />
+        </CModalBody>
+        <CModalFooter></CModalFooter>
+      </CModal>
+
+      <CModal
+        size="lg"
+        visible={openDriverApprovePopup}
+        onClose={() => setOpenDriverApprovePopup(false)}
+      >
+        <CModalHeader>
+          <CModalTitle>Driver Approve</CModalTitle>
+        </CModalHeader>
+        <CModalBody>
+          <DriverApprove
+            selectedRowData={selectedRowData}
+            closePopup={setOpenDriverApprovePopup}
+            onRefresh={refreshData}
           />
         </CModalBody>
         <CModalFooter></CModalFooter>

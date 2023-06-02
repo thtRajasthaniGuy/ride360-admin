@@ -20,7 +20,7 @@ const DriverVehicleEdit = (props) => {
   const [rCBackImageUrl, setRCBackImageUrl] = useState('')
 
   useEffect(() => {
-    var url = 'http://192.168.29.32:4000/api/v1/admin-driver-vehicle-list/' + props.driverId
+    var url = 'http://localhost:4000/api/v1/admin-driver-vehicle-list/' + props.driverId
     axios.get(url).then((response) => {
       console.log(response.data)
       setData(response.data.data[0])
@@ -172,6 +172,7 @@ const DriverVehicleEdit = (props) => {
                 label="Vehicle Brand"
                 value={vehicleBrand}
                 onChange={onVehicleBrandChange}
+                disabled={props.isAccountApprove}
               />
               <CFormInput
                 type="text"
@@ -179,12 +180,14 @@ const DriverVehicleEdit = (props) => {
                 label="Vehicle Model"
                 value={vehicleModel}
                 onChange={onvehicleModelChange}
+                disabled={props.isAccountApprove}
               />
               <CFormInput
                 type="file"
                 id="formFile"
                 label="Vehicle Front Image"
                 onChange={onVehicleFrontImageUpload}
+                disabled={props.isAccountApprove}
               />
               <img
                 style={{ margin: '10px' }}
@@ -199,6 +202,7 @@ const DriverVehicleEdit = (props) => {
                 id="formFile"
                 label="Vehicle Back Image"
                 onChange={onVehicleBackImageUpload}
+                disabled={props.isAccountApprove}
               />
               <img
                 style={{ margin: '10px' }}
@@ -220,6 +224,7 @@ const DriverVehicleEdit = (props) => {
                 label="Vehicle Number"
                 value={vehicleNumber}
                 onChange={onVehicleNumberChange}
+                disabled={props.isAccountApprove}
               />
               <CFormInput
                 type="text"
@@ -227,12 +232,14 @@ const DriverVehicleEdit = (props) => {
                 label="Vehicle Type"
                 value={vehicleType}
                 onChange={onVehicleTypeChange}
+                disabled={props.isAccountApprove}
               />
               <CFormInput
                 type="file"
                 id="formFile"
                 label="Registration Certificate Front Image"
                 onChange={onRCFrontImageUpload}
+                disabled={props.isAccountApprove}
               />
               <img
                 style={{ margin: '10px' }}
@@ -247,6 +254,7 @@ const DriverVehicleEdit = (props) => {
                 id="formFile"
                 label="Registration Certificate Back Image"
                 onChange={onRCBackImageUpload}
+                disabled={props.isAccountApprove}
               />
               <img
                 style={{ margin: '10px' }}
@@ -260,16 +268,18 @@ const DriverVehicleEdit = (props) => {
           </CCard>
         </CCol>
         <div className="text-center">
-          <CButton
-            style={{ margin: '10px' }}
-            color="primary"
-            variant="outline"
-            className="me-3"
-            disabled={disableButton}
-            onClick={() => onUpdateVehicleDetailsClick()}
-          >
-            Update Vehicle Details
-          </CButton>
+          {props.isAccountApprove ? null : (
+            <CButton
+              style={{ margin: '10px' }}
+              color="primary"
+              variant="outline"
+              className="me-3"
+              disabled={disableButton}
+              onClick={() => onUpdateVehicleDetailsClick()}
+            >
+              Update Vehicle Details
+            </CButton>
+          )}
         </div>
       </CRow>
       <p id="onOkClick" style={{ display: 'none' }}>
@@ -284,6 +294,7 @@ const DriverVehicleEdit = (props) => {
 DriverVehicleEdit.propTypes = {
   driverId: PropTypes.string,
   closePopup: PropTypes.func,
+  isAccountApprove: PropTypes.bool,
 }
 
 export default React.memo(DriverVehicleEdit)

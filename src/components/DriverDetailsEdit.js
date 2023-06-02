@@ -2,13 +2,34 @@ import React, { useState, useEffect } from 'react'
 import { PropTypes } from 'prop-types'
 import axios from 'axios'
 import { CForm, CRow, CFormLabel, CCol } from '@coreui/react'
-import { CFormInput, CButton } from '@coreui/react'
+import { CFormInput, CButton, CFormSelect } from '@coreui/react'
+import { updateDriverAccountStatus } from 'src/utils/calloutHelper'
+
+const accountStatusOptions = [
+  {
+    label: 'Active',
+    value: 'active',
+  },
+  {
+    label: 'Banned',
+    value: 'banned',
+  },
+  {
+    label: 'InActive',
+    value: 'inactive',
+  },
+  {
+    label: 'Pending',
+    value: 'pending',
+  },
+]
 
 const DriverDetailsEdit = (props) => {
   const [disableButton, setDisableButtonState] = useState(true)
   const [driverName, setDriverName] = useState(props.selectedRowData.name)
   const [driverEmail, setDriverEmail] = useState(props.selectedRowData.email)
   const [driverDob, setDriverDob] = useState(props.selectedRowData.dob)
+  const [accountStatus, setAccountStatus] = useState(props.selectedRowData.accountStatus)
 
   const onNameChange = (e) => {
     console.log(e.target.value)
@@ -25,39 +46,67 @@ const DriverDetailsEdit = (props) => {
     setDisableButtonState(false)
     setDriverDob(e.target.value)
   }
+
+  const onAccountStatusChnage = (event) => {
+    setDisableButtonState(false)
+    setAccountStatus(event.target.value)
+  }
+
   const onUpdateDetailsClick = () => {
     if (window.confirm('Are you sure to update Driver details!')) {
       document.getElementById('onOkClick').style.display = 'none'
       document.getElementById('onCancleClick').style.display = 'none'
 
-      let formData = new FormData()
-      formData.append('phoneNumber', props.selectedRowData.phoneNumber)
-      if (driverName !== null) {
-        formData.append('name', driverName)
-      }
-      if (driverEmail !== null) {
-        formData.append('email', driverEmail)
-      }
-      if (driverDob !== null) {
-        formData.append('dob', driverDob)
-      }
+      if (props.isAccountApprove) {
+        console.log('if isAccountApprove' + props.isAccountApprove)
+        updateAccountStatus()
+      } else {
+        console.log('else isAccountApprove' + props.isAccountApprove)
 
-      const headers = {
-        'Content-Type': 'multipart/form-data;',
-      }
+        let formData = new FormData()
+        formData.append('phoneNumber', props.selectedRowData.phoneNumber)
+        if (driverName !== null) {
+          formData.append('name', driverName)
+        }
+        if (driverEmail !== null) {
+          formData.append('email', driverEmail)
+        }
+        if (driverDob !== null) {
+          formData.append('dob', driverDob)
+        }
 
-      axios
-        .put('http://192.168.29.32:4000/api/v1/admin-driver-basic-update', formData, {
-          headers: headers,
-        })
-        .then((response) => {
-          console.log(response.data)
-          props.onRefresh()
-          props.closePopup(false)
-        })
+        const headers = {
+          'Content-Type': 'multipart/form-data;',
+        }
+
+        axios
+          .put('http://localhost:4000/api/v1/admin-driver-basic-update', formData, {
+            headers: headers,
+          })
+          .then((response) => {
+            console.log(response.data)
+            props.onRefresh()
+            props.closePopup(false)
+          })
+      }
     } else {
       document.getElementById('onOkClick').style.display = 'none'
       document.getElementById('onCancleClick').style.display = 'none'
+    }
+  }
+
+  const updateAccountStatus = async () => {
+    var url = 'http://localhost:4000/api/v1/driveraccountstatus'
+
+    let payload = {
+      phoneNumber: props.selectedRowData.phoneNumber,
+      accountStatus: accountStatus,
+    }
+
+    let response = await updateDriverAccountStatus('POST', url, payload)
+    if (response !== undefined && response.status) {
+      props.onRefresh()
+      props.closePopup(false)
     }
   }
 
@@ -69,7 +118,13 @@ const DriverDetailsEdit = (props) => {
             Name
           </CFormLabel>
           <CCol sm={10}>
-            <CFormInput type="text" id="Name" value={driverName} onChange={onNameChange} />
+            <CFormInput
+              type="text"
+              id="Name"
+              value={driverName}
+              onChange={onNameChange}
+              disabled={props.isAccountApprove}
+            />
           </CCol>
         </CRow>
         <CRow className="mb-3">
@@ -77,7 +132,13 @@ const DriverDetailsEdit = (props) => {
             Email
           </CFormLabel>
           <CCol sm={10}>
-            <CFormInput type="email" id="email" value={driverEmail} onChange={onEmailChange} />
+            <CFormInput
+              type="email"
+              id="email"
+              value={driverEmail}
+              onChange={onEmailChange}
+              disabled={props.isAccountApprove}
+            />
           </CCol>
         </CRow>
         <CRow className="mb-3">
@@ -98,7 +159,53 @@ const DriverDetailsEdit = (props) => {
             Date of Birth
           </CFormLabel>
           <CCol sm={10}>
-            <CFormInput type="Date" id="dob" value={driverDob} onChange={onDobChange} />
+            <CFormInput
+              type="Date"
+              id="dob"
+              value={driverDob}
+              onChange={onDobChange}
+              disabled={props.isAccountApprove}
+            />
+          </CCol>
+        </CRow>
+        <CRow className="mb-3">
+          <CFormLabel htmlFor="inputEmail3" className="col-sm-2 col-form-label">
+            Total kilometer
+          </CFormLabel>
+          <CCol sm={10}>
+            <CFormInput
+              type="text"
+              id="totalkilometer"
+              value={props.selectedRowData.totalkilometer}
+              disabled
+            />
+          </CCol>
+        </CRow>
+        <CRow className="mb-3">
+          <CFormLabel htmlFor="inputEmail3" className="col-sm-2 col-form-label">
+            Rating
+          </CFormLabel>
+          <CCol sm={10}>
+            <CFormInput type="text" id="rating" value={props.selectedRowData.rating} disabled />
+          </CCol>
+        </CRow>
+        <CRow className="mb-3">
+          <CFormLabel htmlFor="inputEmail3" className="col-sm-2 col-form-label">
+            Account Status
+          </CFormLabel>
+          <CCol sm={10}>
+            <CFormSelect
+              aria-label="Disabled select example"
+              disabled={props.isAccountApprove == true ? false : true}
+              value={accountStatus}
+              onChange={(event) => onAccountStatusChnage(event)}
+            >
+              {accountStatusOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </CFormSelect>
           </CCol>
         </CRow>
         <div className="text-center">
@@ -126,6 +233,7 @@ DriverDetailsEdit.propTypes = {
   selectedRowData: PropTypes.object,
   closePopup: PropTypes.func,
   onRefresh: PropTypes.func,
+  isAccountApprove: PropTypes.bool,
 }
 
 export default React.memo(DriverDetailsEdit)

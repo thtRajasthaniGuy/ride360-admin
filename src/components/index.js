@@ -16,6 +16,7 @@ import RideFareDetailsEdit from './RideFareDetailsEdit'
 import AddRideFare from './AddRideFare'
 import AddCoupon from './AddCoupon'
 import EditViewCoupon from './EditViewCoupon'
+import DriverApprove from './DriverApprove'
 
 export {
   AppBreadcrumb,
@@ -36,4 +37,5 @@ export {
   AddRideFare,
   AddCoupon,
   EditViewCoupon,
+  DriverApprove,
 }
