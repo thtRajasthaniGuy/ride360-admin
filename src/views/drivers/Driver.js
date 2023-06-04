@@ -8,7 +8,7 @@ import { DriverApprove } from 'src/components'
 import { Pagination } from 'src/components'
 import { CCardHeader, CNavbar, CContainer, CNavbarBrand, CModalTitle } from '@coreui/react'
 import { CForm, CFormInput, CButton, CFormSelect, CModal, CModalHeader } from '@coreui/react'
-import { CModalBody, CModalFooter } from '@coreui/react'
+import { CModalBody, CModalFooter, CToast, CToastBody, CToastClose } from '@coreui/react'
 import { getDriversData } from 'src/utils/calloutHelper'
 
 const columns = [
@@ -77,6 +77,8 @@ const Driver = () => {
   const [openEditVehiclePopup, setEditVehiclePopup] = useState(false)
   const [openDriverApprovePopup, setOpenDriverApprovePopup] = useState(false)
   const [refreshCmpData, setRefreshData] = useState(false)
+  const [notFoundData, setNotFoundData] = useState(false)
+  const [alertMessage, setAlertMessage] = useState('')
 
   useEffect(() => {
     getDrivers()
@@ -89,8 +91,17 @@ const Driver = () => {
     let url =
       'http://localhost:4000/api/v1/admin-driver-filter-List/' + name + '/' + email + '/' + phone
     let response = await getDriversData('GET', url)
-    if (response !== undefined && response.status) {
-      setData(response.data.data)
+    console.log(JSON.stringify(response))
+    if (response !== undefined && response.status === 200) {
+      if (response.data.data) {
+        setData(response.data.data)
+      } else {
+        setNotFoundData(true)
+        setAlertMessage(response.data.msg)
+      }
+    } else if (response.hasOwnProperty('message')) {
+      setNotFoundData(true)
+      setAlertMessage(response.message)
     }
   }
 
@@ -186,6 +197,7 @@ const Driver = () => {
     setDisableButton(false)
   }
   const onSearchClick = () => {
+    setNotFoundData(false)
     setStartIndex(0)
     setCurrentPage(1)
     setTotalPages(0)
@@ -280,6 +292,20 @@ const Driver = () => {
         </CNavbar>
         <CNavbar colorScheme="light" className="bg-light"></CNavbar>
       </CCardHeader>
+
+      <CToast
+        color="warning"
+        autohide={false}
+        visible={notFoundData}
+        className="align-items-center"
+        onClose={() => setNotFoundData(false)}
+      >
+        <div className="d-flex">
+          <CToastBody>Hello, Admin! {alertMessage}.</CToastBody>
+          <CToastClose className="me-2 m-auto" />
+        </div>
+      </CToast>
+
       <DataTable columns={columns} items={driversData} />
       <Pagination
         totalPages={totalPages}

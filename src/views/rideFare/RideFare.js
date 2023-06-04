@@ -58,35 +58,8 @@ const RideFare = () => {
   const [openAddNewRideFarePopup, setOpenAddNewRideFarePopup] = useState(false)
   const [refreshCmpData, setRefreshData] = useState(false)
 
-  const refreshData = (updatedRideFareData, isAdd) => {
-    var tempData = tempRideFareData
-    if (isAdd === 'isAdd') {
-      updatedRideFareData.sno = tempData.length + 1
-      updatedRideFareData.action = (
-        <CButton
-          type="submit"
-          className="me-2"
-          color="primary"
-          variant="outline"
-          onClick={() => onEditViewClick(updatedRideFareData)}
-        >
-          Edit/View
-        </CButton>
-      )
-      tempData.push(updatedRideFareData)
-    } else {
-      tempData.forEach((record) => {
-        if (record._id === updatedRideFareData._id) {
-          Object.entries(updatedRideFareData).forEach(([key, value]) => {
-            record[key] = value
-          })
-        }
-      })
-    }
-
-    setRideFareData(tempData.slice(startIndex, startIndex + recordPerPage))
-    setTotalPages(tempData.length / recordPerPage)
-    setTempRideFareData(tempData)
+  const refreshData = () => {
+    getRideFares()
   }
 
   useEffect(() => {

@@ -88,7 +88,7 @@ const RideFareDetailsEdit = (props) => {
         .then((response) => {
           console.log(response.data)
           props.closePopup(false)
-          props.onRefresh(selectedRowData, 'isUpdate')
+          props.onRefresh()
         })
     } else {
       document.getElementById('onOkClick').style.display = 'none'

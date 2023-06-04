@@ -83,7 +83,7 @@ const AddRideFare = (props) => {
         .then((response) => {
           console.log(response.data)
           props.closePopup(false)
-          props.onRefresh(response.data.data, 'isAdd')
+          props.onRefresh()
         })
     } else {
       document.getElementById('onOkClick').style.display = 'none'
