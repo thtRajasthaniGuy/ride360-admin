@@ -56,7 +56,7 @@ const DriverLicenseEdit = (props) => {
   const onlicenseFrontImageUpload = (event) => {
     console.log('onlicenseFrontImageUpload event:::===>>' + event.target.files[0])
     setDisableButtonState(false)
-    setLicenseFrontImageURL()
+    setLicenseFrontImageURL('')
     const data = new FileReader()
     data.addEventListener('load', () => {
       setLicenseFrontImage(data.result)
@@ -66,7 +66,7 @@ const DriverLicenseEdit = (props) => {
   const onlicenseBackImageUpload = (event) => {
     console.log('onlicenseBackImageUpload event:::===>>' + event.target.files[0])
     setDisableButtonState(false)
-    setLicenseBackImageURL()
+    setLicenseBackImageURL('')
     const data = new FileReader()
     data.addEventListener('load', () => {
       setLicenseBackImage(data.result)
@@ -81,7 +81,7 @@ const DriverLicenseEdit = (props) => {
   const onSelfieWithDLUpload = (event) => {
     console.log('onSelfieWithDLUpload event:::===>>' + event.target.files[0])
     setDisableButtonState(false)
-    setSelfieWithDLURL()
+    setSelfieWithDLURL('')
     const data = new FileReader()
     data.addEventListener('load', () => {
       setSelfieWithDL(data.result)
@@ -91,7 +91,7 @@ const DriverLicenseEdit = (props) => {
   const onInsuranceImageUpload = (event) => {
     console.log('onInsuranceImageUpload event:::===>>' + event.target.files[0])
     setDisableButtonState(false)
-    setInsuranceImageURL()
+    setInsuranceImageURL('')
     const data = new FileReader()
     data.addEventListener('load', () => {
       setInsuranceImage(data.result)
@@ -134,7 +134,7 @@ const DriverLicenseEdit = (props) => {
       if (selfieWithDL !== '') {
         formData.append('selfieWithDL', selfieWithDL)
       } else if (selfieWithDLURL !== '') {
-        formData.append('selfieWithDLURL', selfieWithDLURL)
+        formData.append('SelfieWithDLURL', selfieWithDLURL)
       }
       if (insuranceImage !== '') {
         formData.append('insuranceImage', insuranceImage)
@@ -147,7 +147,7 @@ const DriverLicenseEdit = (props) => {
       }
 
       axios
-        .put('http://192.168.29.32:4000/api/v1/admin-driver-license-update', formData, {
+        .put('http://localhost:4000/api/v1/admin-driver-license-update', formData, {
           headers: headers,
         })
         .then((response) => {

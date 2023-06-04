@@ -122,33 +122,33 @@ const DriverVehicleEdit = (props) => {
         formData.append('vehicleType', vehicleType)
       }
       if (vehicleFrontImage !== '') {
-        console.log('vehicleFrontImage' + vehicleFrontImage)
+        console.log('vehicleFrontImage>>>>>>' + vehicleFrontImage)
         formData.append('vehicleFrontImage', vehicleFrontImage)
       } else if (vehicleFrontImageUrl !== '') {
-        console.log('vehicleFrontImageUrl' + vehicleFrontImageUrl)
-        formData.append('vehicleFrontImageUrl', vehicleFrontImageUrl)
+        console.log('vehicleFrontImageURL>>>>>' + vehicleFrontImageUrl)
+        formData.append('vehicleFrontImageURL', vehicleFrontImageUrl)
       }
       if (vehicleBackImage !== '') {
         formData.append('vehicleBackImage', vehicleBackImage)
       } else if (vehicleBackImageUrl !== '') {
-        formData.append('vehicleBackImageUrl', vehicleBackImageUrl)
+        formData.append('vehicleBackImageURL', vehicleBackImageUrl)
       }
       if (rCFrontImage !== '') {
         formData.append('registrationCertificateFrontImage', rCFrontImage)
       } else if (rCFrontImageUrl !== '') {
-        formData.append('rCFrontImageUrl', rCFrontImageUrl)
+        formData.append('registrationCertificateFrontImageURL', rCFrontImageUrl)
       }
       if (rCBackImage !== '') {
         formData.append('registrationCertificateBackImage', rCBackImage)
       } else if (rCBackImageUrl !== '') {
-        formData.append('rCBackImageUrl', rCBackImageUrl)
+        formData.append('registrationCertificateBackImageURL', rCBackImageUrl)
       }
       const headers = {
         'Content-Type': 'multipart/form-data;',
       }
 
       axios
-        .put('http://192.168.29.32:4000/api/v1/admin-driver-vehicle-update', formData, {
+        .put('http://localhost:4000/api/v1/admin-driver-vehicle-update', formData, {
           headers: headers,
         })
         .then((response) => {
