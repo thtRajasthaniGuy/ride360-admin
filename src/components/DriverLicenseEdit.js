@@ -57,21 +57,19 @@ const DriverLicenseEdit = (props) => {
     console.log('onlicenseFrontImageUpload event:::===>>' + event.target.files[0])
     setDisableButtonState(false)
     setLicenseFrontImageURL('')
-    const data = new FileReader()
-    data.addEventListener('load', () => {
-      setLicenseFrontImage(data.result)
+    setLicenseFrontImage({
+      image_preview: URL.createObjectURL(event.target.files[0]),
+      image_file: event.target.files[0],
     })
-    data.readAsDataURL(event.target.files[0])
   }
   const onlicenseBackImageUpload = (event) => {
     console.log('onlicenseBackImageUpload event:::===>>' + event.target.files[0])
     setDisableButtonState(false)
     setLicenseBackImageURL('')
-    const data = new FileReader()
-    data.addEventListener('load', () => {
-      setLicenseBackImage(data.result)
+    setLicenseBackImage({
+      image_preview: URL.createObjectURL(event.target.files[0]),
+      image_file: event.target.files[0],
     })
-    data.readAsDataURL(event.target.files[0])
   }
   const onInsuranceExpirationDateChange = (event) => {
     console.log('onInsuranceExpDateChange event:::===>>' + JSON.stringify(event.target.value))
@@ -82,21 +80,19 @@ const DriverLicenseEdit = (props) => {
     console.log('onSelfieWithDLUpload event:::===>>' + event.target.files[0])
     setDisableButtonState(false)
     setSelfieWithDLURL('')
-    const data = new FileReader()
-    data.addEventListener('load', () => {
-      setSelfieWithDL(data.result)
+    setSelfieWithDL({
+      image_preview: URL.createObjectURL(event.target.files[0]),
+      image_file: event.target.files[0],
     })
-    data.readAsDataURL(event.target.files[0])
   }
   const onInsuranceImageUpload = (event) => {
     console.log('onInsuranceImageUpload event:::===>>' + event.target.files[0])
     setDisableButtonState(false)
     setInsuranceImageURL('')
-    const data = new FileReader()
-    data.addEventListener('load', () => {
-      setInsuranceImage(data.result)
+    setInsuranceImage({
+      image_preview: URL.createObjectURL(event.target.files[0]),
+      image_file: event.target.files[0],
     })
-    data.readAsDataURL(event.target.files[0])
   }
   const onUpdateLicenseDetailsClick = () => {
     console.log('onUpdateLicenseDetailsClick :::===>>')
@@ -120,24 +116,22 @@ const DriverLicenseEdit = (props) => {
       console.log(licenseFrontImageURL)
 
       if (licenseFrontImage !== '') {
-        console.log('licenseFrontImage if' + licenseFrontImage)
-        formData.append('licenseFrontImage', licenseFrontImage)
+        formData.append('licenseFrontImage', licenseFrontImage.image_file)
       } else if (licenseFrontImageURL !== '') {
-        console.log('licenseFrontImageURL if esle' + licenseFrontImageURL)
         formData.append('licenseFrontImageURL', licenseFrontImageURL)
       }
       if (licenseBackImage !== '') {
-        formData.append('licenseBackImage', licenseBackImage)
+        formData.append('licenseBackImage', licenseBackImage.image_file)
       } else if (licenseBackImageURL !== '') {
         formData.append('licenseBackImageURL', licenseBackImageURL)
       }
       if (selfieWithDL !== '') {
-        formData.append('selfieWithDL', selfieWithDL)
+        formData.append('selfieWithDL', selfieWithDL.image_file)
       } else if (selfieWithDLURL !== '') {
         formData.append('SelfieWithDLURL', selfieWithDLURL)
       }
       if (insuranceImage !== '') {
-        formData.append('insuranceImage', insuranceImage)
+        formData.append('insuranceImage', insuranceImage.image_file)
       } else if (insuranceImageURL !== '') {
         formData.append('insuranceImageURL', insuranceImageURL)
       }
@@ -194,7 +188,7 @@ const DriverLicenseEdit = (props) => {
                 width={200}
                 height={200}
                 className="image"
-                src={licenseFrontImage ? licenseFrontImage : licenseFrontImageURL}
+                src={licenseFrontImage.image_preview ? licenseFrontImage.image_preview : licenseFrontImageURL}
                 alt=""
               />
 
@@ -210,7 +204,7 @@ const DriverLicenseEdit = (props) => {
                 width={200}
                 height={200}
                 className="image"
-                src={licenseBackImage ? licenseBackImage : licenseBackImageURL}
+                src={licenseBackImage.image_preview ? licenseBackImage.image_preview : licenseBackImageURL}
                 alt=""
               />
             </CCardBody>
@@ -239,7 +233,7 @@ const DriverLicenseEdit = (props) => {
                 width={200}
                 height={200}
                 className="image"
-                src={selfieWithDL ? selfieWithDL : selfieWithDLURL}
+                src={selfieWithDL.image_preview ? selfieWithDL.image_preview : selfieWithDLURL}
                 alt=""
               />
               <CFormInput
@@ -254,7 +248,7 @@ const DriverLicenseEdit = (props) => {
                 width={200}
                 height={200}
                 className="image"
-                src={insuranceImage ? insuranceImage : insuranceImageURL}
+                src={insuranceImage.image_preview ? insuranceImage.image_preview : insuranceImageURL}
                 alt=""
               />
             </CCardBody>

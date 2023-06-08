@@ -64,41 +64,37 @@ const DriverVehicleEdit = (props) => {
     console.log('onVehicleFrontImageUpload event:::===>>' + event.target.files[0])
     setDisableButtonState(false)
     setVehicleFrontImageUrl('')
-    const data = new FileReader()
-    data.addEventListener('load', () => {
-      setVehicleFrontImage(data.result)
+    setVehicleFrontImage({
+      image_preview: URL.createObjectURL(event.target.files[0]),
+      image_file: event.target.files[0],
     })
-    data.readAsDataURL(event.target.files[0])
   }
   const onVehicleBackImageUpload = (event) => {
     console.log('onVehicleBackImageUpload event:::===>>' + event.target.files[0])
     setDisableButtonState(false)
     setVehicleBackImageUrl('')
-    const data = new FileReader()
-    data.addEventListener('load', () => {
-      setVehicleBackImage(data.result)
+    setVehicleBackImage({
+      image_preview: URL.createObjectURL(event.target.files[0]),
+      image_file: event.target.files[0],
     })
-    data.readAsDataURL(event.target.files[0])
   }
   const onRCFrontImageUpload = (event) => {
     console.log('onRCFrontImageUpload event:::===>>' + event.target.files[0])
     setDisableButtonState(false)
     setRCFrontImageUrl('')
-    const data = new FileReader()
-    data.addEventListener('load', () => {
-      setRCFrontImage(data.result)
+    setRCFrontImage({
+      image_preview: URL.createObjectURL(event.target.files[0]),
+      image_file: event.target.files[0],
     })
-    data.readAsDataURL(event.target.files[0])
   }
   const onRCBackImageUpload = (event) => {
     console.log('onRCBackImageUpload event:::===>>' + event.target.files[0])
     setDisableButtonState(false)
     setRCBackImageUrl('')
-    const data = new FileReader()
-    data.addEventListener('load', () => {
-      setRCBackImage(data.result)
+    setRCBackImage({
+      image_preview: URL.createObjectURL(event.target.files[0]),
+      image_file: event.target.files[0],
     })
-    data.readAsDataURL(event.target.files[0])
   }
   const onUpdateVehicleDetailsClick = () => {
     console.log('onUpdateVehicleDetailsClick :::===>>')
@@ -122,24 +118,22 @@ const DriverVehicleEdit = (props) => {
         formData.append('vehicleType', vehicleType)
       }
       if (vehicleFrontImage !== '') {
-        console.log('vehicleFrontImage>>>>>>' + vehicleFrontImage)
-        formData.append('vehicleFrontImage', vehicleFrontImage)
+        formData.append('vehicleFrontImage', vehicleFrontImage.image_file)
       } else if (vehicleFrontImageUrl !== '') {
-        console.log('vehicleFrontImageURL>>>>>' + vehicleFrontImageUrl)
         formData.append('vehicleFrontImageURL', vehicleFrontImageUrl)
       }
       if (vehicleBackImage !== '') {
-        formData.append('vehicleBackImage', vehicleBackImage)
+        formData.append('vehicleBackImage', vehicleBackImage.image_file)
       } else if (vehicleBackImageUrl !== '') {
         formData.append('vehicleBackImageURL', vehicleBackImageUrl)
       }
       if (rCFrontImage !== '') {
-        formData.append('registrationCertificateFrontImage', rCFrontImage)
+        formData.append('registrationCertificateFrontImage', rCFrontImage.image_file)
       } else if (rCFrontImageUrl !== '') {
         formData.append('registrationCertificateFrontImageURL', rCFrontImageUrl)
       }
       if (rCBackImage !== '') {
-        formData.append('registrationCertificateBackImage', rCBackImage)
+        formData.append('registrationCertificateBackImage', rCBackImage.image_file)
       } else if (rCBackImageUrl !== '') {
         formData.append('registrationCertificateBackImageURL', rCBackImageUrl)
       }
@@ -194,7 +188,11 @@ const DriverVehicleEdit = (props) => {
                 width={200}
                 height={200}
                 className="image"
-                src={vehicleFrontImage ? vehicleFrontImage : vehicleFrontImageUrl}
+                src={
+                  vehicleFrontImage.image_preview
+                    ? vehicleFrontImage.image_preview
+                    : vehicleFrontImageUrl
+                }
                 alt=""
               />
               <CFormInput
@@ -209,7 +207,11 @@ const DriverVehicleEdit = (props) => {
                 width={200}
                 height={200}
                 className="image"
-                src={vehicleBackImage ? vehicleBackImage : vehicleBackImageUrl}
+                src={
+                  vehicleBackImage.image_preview
+                    ? vehicleBackImage.image_preview
+                    : vehicleBackImageUrl
+                }
                 alt=""
               />
             </CCardBody>
@@ -246,7 +248,7 @@ const DriverVehicleEdit = (props) => {
                 width={200}
                 height={200}
                 className="image"
-                src={rCFrontImage ? rCFrontImage : rCFrontImageUrl}
+                src={rCFrontImage.image_preview ? rCFrontImage.image_preview : rCFrontImageUrl}
                 alt=""
               />
               <CFormInput
@@ -261,7 +263,7 @@ const DriverVehicleEdit = (props) => {
                 width={200}
                 height={200}
                 className="image"
-                src={rCBackImage ? rCBackImage : rCBackImageUrl}
+                src={rCBackImage.image_preview ? rCBackImage.image_preview : rCBackImageUrl}
                 alt=""
               />
             </CCardBody>
