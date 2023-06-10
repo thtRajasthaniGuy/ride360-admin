@@ -156,6 +156,70 @@ const updateDriverAccountStatus = async (method, url, payload) => {
   return result
 }
 
+const driverBasicUpdate = async (method, url, payload) => {
+
+  const result = await axios({
+    method: method,
+    url: url,
+    data: payload,
+    headers: {
+      'Content-type': 'multipart/form-data;',
+    },
+  })
+    .then((response) => {
+      console.log('driverBasicUpdate response :::====>>' + JSON.stringify(response))
+      return response
+    })
+    .catch((error) => {
+      console.log('driverBasicUpdate error :::====>>' + JSON.stringify(error))
+      return error
+    })
+  return result
+}
+
+const updateDriverVehicleData = async (method, url, payload) => {
+
+  const result = await axios({
+    method: method,
+    url: url,
+    data: payload,
+    headers: {
+      'Content-type': 'multipart/form-data;',
+    },
+  })
+    .then((response) => {
+      console.log('updateDriverVehicleData response :::====>>' + JSON.stringify(response))
+      return response
+    })
+    .catch((error) => {
+      console.log('updateDriverVehicleData error :::====>>' + JSON.stringify(error))
+      return error
+    })
+  return result
+}
+
+const updateDriverLicenseData = async (method, url, payload) => {
+
+  const result = await axios({
+    method: method,
+    url: url,
+    data: payload,
+    headers: {
+      'Content-type': 'multipart/form-data;',
+    },
+  })
+    .then((response) => {
+      console.log('updateDriverLicenseData response :::====>>' + JSON.stringify(response))
+      return response
+    })
+    .catch((error) => {
+      console.log('updateDriverLicenseData error :::====>>' + JSON.stringify(error))
+      return error
+    })
+  return result
+}
+
+
 export {
   getDriversData,
   getRideFaresData,
@@ -166,4 +230,7 @@ export {
   getDriverLicenseData,
   getDriverVehicleData,
   updateDriverAccountStatus,
+  driverBasicUpdate,
+  updateDriverVehicleData,
+  updateDriverLicenseData
 }

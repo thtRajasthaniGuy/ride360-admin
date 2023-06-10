@@ -3,7 +3,8 @@ import { PropTypes } from 'prop-types'
 import axios from 'axios'
 import { CForm, CRow, CFormLabel, CCol } from '@coreui/react'
 import { CFormInput, CButton, CFormSelect } from '@coreui/react'
-import { updateDriverAccountStatus } from 'src/utils/calloutHelper'
+import { updateDriverAccountStatus, driverBasicUpdate } from 'src/utils/calloutHelper'
+import { CToast, CToastBody, CToastClose } from '@coreui/react'
 
 const accountStatusOptions = [
   {
@@ -30,6 +31,8 @@ const DriverDetailsEdit = (props) => {
   const [driverEmail, setDriverEmail] = useState(props.selectedRowData.email)
   const [driverDob, setDriverDob] = useState(props.selectedRowData.dob)
   const [accountStatus, setAccountStatus] = useState(props.selectedRowData.accountStatus)
+  const [isUpdateSuccessFully, setIsUpdateSuccessFully] = useState(false)
+  const [displayMessage, setDisplayMessage] = useState('')
 
   const onNameChange = (e) => {
     console.log(e.target.value)
@@ -52,7 +55,7 @@ const DriverDetailsEdit = (props) => {
     setAccountStatus(event.target.value)
   }
 
-  const onUpdateDetailsClick = () => {
+  const onUpdateDetailsClick = async () => {
     if (window.confirm('Are you sure to update Driver details!')) {
       document.getElementById('onOkClick').style.display = 'none'
       document.getElementById('onCancleClick').style.display = 'none'
@@ -75,19 +78,17 @@ const DriverDetailsEdit = (props) => {
           formData.append('dob', driverDob)
         }
 
-        const headers = {
-          'Content-Type': 'multipart/form-data;',
-        }
+        let url = 'http://localhost:4000/api/v1/admin-driver-basic-update'
+        let response = await driverBasicUpdate('PUT', url, formData)
 
-        axios
-          .put('http://localhost:4000/api/v1/admin-driver-basic-update', formData, {
-            headers: headers,
-          })
-          .then((response) => {
-            console.log(response.data)
-            props.onRefresh()
+        if (response !== undefined) {
+          setIsUpdateSuccessFully(true)
+          setDisplayMessage(response.data.msg)
+          props.onRefresh()
+          setTimeout(() => {
             props.closePopup(false)
-          })
+          }, 2000)
+        }
       }
     } else {
       document.getElementById('onOkClick').style.display = 'none'
@@ -105,14 +106,29 @@ const DriverDetailsEdit = (props) => {
 
     let response = await updateDriverAccountStatus('POST', url, payload)
     if (response !== undefined && response.status) {
+      setIsUpdateSuccessFully(true)
+      setDisplayMessage('Driver Account ' + response.data.msg)
       props.onRefresh()
-      props.closePopup(false)
+      setTimeout(() => {
+        props.closePopup(false)
+      }, 2000)
     }
   }
 
   return (
     <div>
       <CForm>
+        <CToast
+          autohide={true}
+          visible={isUpdateSuccessFully}
+          color="success"
+          className="align-items-center"
+        >
+          <div className="d-flex">
+            <CToastBody>Hello, Admin! {displayMessage}.</CToastBody>
+            <CToastClose className="me-2 m-auto" />
+          </div>
+        </CToast>
         <CRow className="mb-3">
           <CFormLabel htmlFor="inputEmail3" className="col-sm-2 col-form-label">
             Name

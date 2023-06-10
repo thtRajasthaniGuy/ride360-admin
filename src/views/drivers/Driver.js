@@ -85,23 +85,30 @@ const Driver = () => {
   }, [refreshCmpData])
 
   const getDrivers = async () => {
-    let name = nameSearch ? nameSearch : 'null'
-    let email = emailSearch ? emailSearch : 'null'
-    let phone = phoneSearch ? phoneSearch : 'null'
-    let url =
-      'http://localhost:4000/api/v1/admin-driver-filter-List/' + name + '/' + email + '/' + phone
-    let response = await getDriversData('GET', url)
-    console.log(JSON.stringify(response))
-    if (response !== undefined && response.status === 200) {
-      if (response.data.data) {
-        setData(response.data.data)
-      } else {
+    try {
+      let name = nameSearch ? nameSearch : 'null'
+      let email = emailSearch ? emailSearch : 'null'
+      let phone = phoneSearch ? phoneSearch : 'null'
+      let url =
+        'http://localhost:4000/api/v1/admin-driver-filter-List/' + name + '/' + email + '/' + phone
+      let response = await getDriversData('GET', url)
+      console.log(JSON.stringify(response))
+      if (response !== undefined && response.status === 200) {
+        if (response.data.data) {
+          setData(response.data.data)
+        } else {
+          setNotFoundData(true)
+          setAlertMessage(response.data.msg)
+        }
+      } else if (response.hasOwnProperty('message')) {
         setNotFoundData(true)
-        setAlertMessage(response.data.msg)
+        setAlertMessage(response.message)
       }
-    } else if (response.hasOwnProperty('message')) {
+    } catch (error) {
+      console.log('getDrivers error :::====>>' + error)
+      setDriversData('')
       setNotFoundData(true)
-      setAlertMessage(response.message)
+      setAlertMessage(error)
     }
   }
 
@@ -209,6 +216,7 @@ const Driver = () => {
     setEmailSearch('')
     setPhoneSearch('')
     setDisableButton(true)
+    setNotFoundData(false)
     setCurrentPage(1)
     setTotalPages(tempDriversData.length / recordPerPage)
     setDriversData(tempDriversData.slice(0, 0 + recordPerPage))

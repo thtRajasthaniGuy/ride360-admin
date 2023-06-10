@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react'
 import { PropTypes } from 'prop-types'
 import axios from 'axios'
 import { CCol, CRow, CCard, CCardBody, CFormInput, CButton } from '@coreui/react'
+import { getDriverLicenseData, updateDriverLicenseData } from 'src/utils/calloutHelper'
+import { CToast, CToastBody, CToastClose } from '@coreui/react'
 
 const DriverLicenseEdit = (props) => {
-  const [driverLicenseData, setDriverLicenseData] = useState()
+  const [driverLicenseData, setDriverLicenseData] = useState('')
   const [disableButton, setDisableButtonState] = useState(true)
   const [licenseNumber, setLicenseNumber] = useState('')
   const [licenseExpirationDate, setLicenseExpirationDate] = useState('')
@@ -17,20 +19,23 @@ const DriverLicenseEdit = (props) => {
   const [licenseBackImageURL, setLicenseBackImageURL] = useState('')
   const [selfieWithDLURL, setSelfieWithDLURL] = useState('')
   const [insuranceImageURL, setInsuranceImageURL] = useState('')
+  const [isDisplay, setIsDisplay] = useState(false)
+  const [displayMessage, setDisplayMessage] = useState('')
 
-  const config = {
-    headers: {
-      Authorization:
-        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NTYwYjZiNjI4OTA5ZTc1YTcwYmY3YSIsImlhdCI6MTY4MzUzODQwNiwiZXhwIjoxNjkyMTc4NDA2fQ.VmRUeMareWD8lmwaqdQqrsMblrVjNUVGc_JQeiLBAOI',
-    },
-  }
   useEffect(() => {
-    var url = 'http://localhost:4000/api/v1/admin-driver-license-list/' + props.driverId
-    axios.get(url).then((response) => {
-      console.log(response.data)
-      setData(response.data.data[0])
-    })
+    getDriverVehicleDetails()
   }, [])
+
+  const getDriverVehicleDetails = async () => {
+    var url = 'http://localhost:4000/api/v1/admin-driver-license-list/' + props.driverId
+    let response = await getDriverLicenseData('GET', url)
+    if (response !== undefined && response.data.data) {
+      setData(response.data.data[0])
+    } else {
+      setIsDisplay(true)
+      setDisplayMessage(response.data.msg)
+    }
+  }
 
   const setData = (record) => {
     setDriverLicenseData(record)
@@ -94,7 +99,7 @@ const DriverLicenseEdit = (props) => {
       image_file: event.target.files[0],
     })
   }
-  const onUpdateLicenseDetailsClick = () => {
+  const onUpdateLicenseDetailsClick = async () => {
     console.log('onUpdateLicenseDetailsClick :::===>>')
     if (window.confirm('Are you sure to update license details !')) {
       document.getElementById('onOkClick').style.display = 'none'
@@ -136,18 +141,16 @@ const DriverLicenseEdit = (props) => {
         formData.append('insuranceImageURL', insuranceImageURL)
       }
 
-      const headers = {
-        'Content-Type': 'multipart/form-data;',
-      }
+      let url = 'http://localhost:4000/api/v1/admin-driver-license-update'
 
-      axios
-        .put('http://localhost:4000/api/v1/admin-driver-license-update', formData, {
-          headers: headers,
-        })
-        .then((response) => {
-          console.log(response.data)
+      let response = await updateDriverLicenseData('PUT', url, formData)
+      if (response !== undefined) {
+        setIsDisplay(true)
+        setDisplayMessage(response.data.msg)
+        setTimeout(() => {
           props.closePopup(false)
-        })
+        }, 2000)
+      }
     } else {
       document.getElementById('onOkClick').style.display = 'none'
       document.getElementById('onCancleClick').style.display = 'none'
@@ -156,119 +159,140 @@ const DriverLicenseEdit = (props) => {
 
   return (
     <div>
-      <CRow>
-        <CCol sm={6}>
-          <CCard>
-            <CCardBody>
-              <CFormInput
-                type="text"
-                id="Name"
-                label="License Number"
-                value={licenseNumber}
-                onChange={onLicenseNumberChange}
-                disabled={props.isAccountApprove}
-              />
-              <CFormInput
-                type="date"
-                id="Name"
-                label="License Expiration Date"
-                value={licenseExpirationDate}
-                onChange={onLicenseExpirationDate}
-                disabled={props.isAccountApprove}
-              />
-              <CFormInput
-                type="file"
-                id="formFile"
-                label="license Front Image"
-                onChange={onlicenseFrontImageUpload}
-                disabled={props.isAccountApprove}
-              />
-              <img
-                style={{ margin: '10px' }}
-                width={200}
-                height={200}
-                className="image"
-                src={licenseFrontImage.image_preview ? licenseFrontImage.image_preview : licenseFrontImageURL}
-                alt=""
-              />
-
-              <CFormInput
-                type="file"
-                id="formFile"
-                label="license Back Image"
-                onChange={onlicenseBackImageUpload}
-                disabled={props.isAccountApprove}
-              />
-              <img
-                style={{ margin: '10px' }}
-                width={200}
-                height={200}
-                className="image"
-                src={licenseBackImage.image_preview ? licenseBackImage.image_preview : licenseBackImageURL}
-                alt=""
-              />
-            </CCardBody>
-          </CCard>
-        </CCol>
-        <CCol sm={6}>
-          <CCard>
-            <CCardBody>
-              <CFormInput
-                type="date"
-                id="Name"
-                label="Insurance Expiration Date"
-                value={insuranceExpirationDate}
-                onChange={onInsuranceExpirationDateChange}
-                disabled={props.isAccountApprove}
-              />
-              <CFormInput
-                type="file"
-                id="formFile"
-                label="Selfie With DL"
-                onChange={onSelfieWithDLUpload}
-                disabled={props.isAccountApprove}
-              />
-              <img
-                style={{ margin: '10px' }}
-                width={200}
-                height={200}
-                className="image"
-                src={selfieWithDL.image_preview ? selfieWithDL.image_preview : selfieWithDLURL}
-                alt=""
-              />
-              <CFormInput
-                type="file"
-                id="formFile"
-                label="Insurance Image"
-                onChange={onInsuranceImageUpload}
-                disabled={props.isAccountApprove}
-              />
-              <img
-                style={{ margin: '10px' }}
-                width={200}
-                height={200}
-                className="image"
-                src={insuranceImage.image_preview ? insuranceImage.image_preview : insuranceImageURL}
-                alt=""
-              />
-            </CCardBody>
-          </CCard>
-        </CCol>
-        <div className="text-center">
-          {props.isAccountApprove ? null : (
-            <CButton
-              style={{ margin: '10px' }}
-              color="primary"
-              variant="outline"
-              className="me-3"
-              disabled={disableButton}
-              onClick={() => onUpdateLicenseDetailsClick()}
-            >
-              Update License Details
-            </CButton>
-          )}
+      {driverLicenseData == '' || isDisplay ? (
+        <div>
+          <CToast visible={true} color="success" className="align-items-center">
+            <div className="d-flex">
+              <CToastBody>Hello, Admin! {displayMessage}.</CToastBody>
+              <CToastClose className="me-2 m-auto" />
+            </div>
+          </CToast>
         </div>
-      </CRow>
+      ) : (
+        <CRow>
+          <CCol sm={6}>
+            <CCard>
+              <CCardBody>
+                <CFormInput
+                  type="text"
+                  id="Name"
+                  label="License Number"
+                  value={licenseNumber}
+                  onChange={onLicenseNumberChange}
+                  disabled={props.isAccountApprove}
+                />
+                <CFormInput
+                  type="date"
+                  id="Name"
+                  label="License Expiration Date"
+                  value={licenseExpirationDate}
+                  onChange={onLicenseExpirationDate}
+                  disabled={props.isAccountApprove}
+                />
+                <CFormInput
+                  type="file"
+                  id="formFile"
+                  label="license Front Image"
+                  onChange={onlicenseFrontImageUpload}
+                  disabled={props.isAccountApprove}
+                />
+                <img
+                  style={{ margin: '10px' }}
+                  width={200}
+                  height={200}
+                  className="image"
+                  src={
+                    licenseFrontImage.image_preview
+                      ? licenseFrontImage.image_preview
+                      : licenseFrontImageURL
+                  }
+                  alt=""
+                />
+
+                <CFormInput
+                  type="file"
+                  id="formFile"
+                  label="license Back Image"
+                  onChange={onlicenseBackImageUpload}
+                  disabled={props.isAccountApprove}
+                />
+                <img
+                  style={{ margin: '10px' }}
+                  width={200}
+                  height={200}
+                  className="image"
+                  src={
+                    licenseBackImage.image_preview
+                      ? licenseBackImage.image_preview
+                      : licenseBackImageURL
+                  }
+                  alt=""
+                />
+              </CCardBody>
+            </CCard>
+          </CCol>
+          <CCol sm={6}>
+            <CCard>
+              <CCardBody>
+                <CFormInput
+                  type="date"
+                  id="Name"
+                  label="Insurance Expiration Date"
+                  value={insuranceExpirationDate}
+                  onChange={onInsuranceExpirationDateChange}
+                  disabled={props.isAccountApprove}
+                />
+                <CFormInput
+                  type="file"
+                  id="formFile"
+                  label="Selfie With DL"
+                  onChange={onSelfieWithDLUpload}
+                  disabled={props.isAccountApprove}
+                />
+                <img
+                  style={{ margin: '10px' }}
+                  width={200}
+                  height={200}
+                  className="image"
+                  src={selfieWithDL.image_preview ? selfieWithDL.image_preview : selfieWithDLURL}
+                  alt=""
+                />
+                <CFormInput
+                  type="file"
+                  id="formFile"
+                  label="Insurance Image"
+                  onChange={onInsuranceImageUpload}
+                  disabled={props.isAccountApprove}
+                />
+                <img
+                  style={{ margin: '10px' }}
+                  width={200}
+                  height={200}
+                  className="image"
+                  src={
+                    insuranceImage.image_preview ? insuranceImage.image_preview : insuranceImageURL
+                  }
+                  alt=""
+                />
+              </CCardBody>
+            </CCard>
+          </CCol>
+          <div className="text-center">
+            {props.isAccountApprove ? null : (
+              <CButton
+                style={{ margin: '10px' }}
+                color="primary"
+                variant="outline"
+                className="me-3"
+                disabled={disableButton}
+                onClick={() => onUpdateLicenseDetailsClick()}
+              >
+                Update License Details
+              </CButton>
+            )}
+          </div>
+        </CRow>
+      )}
       <p id="onOkClick" style={{ display: 'none' }}>
         Ok
       </p>
