@@ -3,12 +3,15 @@ import { PropTypes } from 'prop-types'
 import axios from 'axios'
 import { CForm, CRow, CCol, CFormInput, CButton } from '@coreui/react'
 import { addNewCoupon } from 'src/utils/calloutHelper'
+import { CToast, CToastBody, CToastClose } from '@coreui/react'
 
 const AddCoupon = (props) => {
   const [disableButton, setDisableButtonState] = useState(true)
   const [couponName, setCouponName] = useState('')
   const [couponDiscountPercentage, setCouponDiscountPercentage] = useState('')
   const [couponExpireyDate, setCouponExpireyDate] = useState('')
+  const [isDisplayAlert, setIsDisplayAlert] = useState(false)
+  const [alertMessage, setAlertMessage] = useState('')
 
   const onCouponDetailsChange = (event) => {
     setDisableButtonState(false)
@@ -27,23 +30,40 @@ const AddCoupon = (props) => {
     let payload = {
       name: couponName,
       expireyDate: couponExpireyDate,
-      discountPercentage: 20,
+      discountPercentage: couponDiscountPercentage,
     }
-
-    let url = 'http://192.168.29.32:4000/api/v1/coupon'
-
+    let url = process.env.REACT_APP_URL + '/coupon'
     const response = await addNewCoupon('post', url, payload)
-    if (response !== undefined && response.status) {
+    if (response !== undefined && response.data) {
       console.log(JSON.stringify( response))
-      props.closePopup(false)
-      props.onRefresh()
-
-    }    
+      setIsDisplayAlert(true);
+      setAlertMessage(response.data.msg)
+      setTimeout(() => {
+        props.closePopup(false)
+       props.onRefresh()
+      }, 2000)
+    }else if(response.message){
+      setIsDisplayAlert(true)
+      setAlertMessage(response.message)
+    }  
 
   }
 
   return (
     <div>
+      <CToast
+        color="success"
+        autohide={true}
+        visible={isDisplayAlert}
+        className="align-items-center"
+        onClose={() => setIsDisplayAlert(false)}
+      >
+        <div className="d-flex">
+          <CToastBody>Hello, Admin! {alertMessage}.</CToastBody>
+          <CToastClose className="me-2 m-auto" />
+        </div>
+      </CToast>
+
       <CForm>
         <CRow className="mb-3">
           <CCol sm={6}>

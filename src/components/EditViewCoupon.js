@@ -3,6 +3,7 @@ import { PropTypes } from 'prop-types'
 import axios from 'axios'
 import { CForm, CRow, CCol, CFormInput, CButton } from '@coreui/react'
 import { deleteCoupon } from 'src/utils/calloutHelper'
+import { CToast, CToastBody, CToastClose } from '@coreui/react'
 
 const EditViewCoupon = (props) => {
   const [disableButton, setDisableButtonState] = useState(true)
@@ -11,37 +12,40 @@ const EditViewCoupon = (props) => {
     props.selectedRowData.discountPercentage,
   )
   const [couponExpireyDate, setCouponExpireyDate] = useState(props.selectedRowData.expireyDate)
-
-  const onCouponDetailsChange = (event) => {
-    setDisableButtonState(false)
-    if (event.target.id === 'name') {
-      setCouponName(event.target.value)
-    }
-    if (event.target.id === 'discountPercentage') {
-      setCouponDiscountPercentage(event.target.value)
-    }
-    if (event.target.id === 'expireyDate') {
-      setCouponExpireyDate(event.target.value)
-    }
-  }
-
-  const onSaveCouponClick = () => {}
+  const [isDisplayAlert, setIsDisplayAlert] = useState(false)
+  const [alertMessage, setAlertMessage] = useState('')
 
   const onDeleteCouponClick = async () => {
     let payload = {
       name: couponName,
     }
-    let url = 'http://192.168.29.32:4000/api/v1/coupon'
+    let url = process.env.REACT_APP_URL + '/coupon'
     const response = await deleteCoupon('delete', url, payload)
     if (response !== undefined && response.status) {
-      console.log(JSON.stringify( response))
-      props.closePopup(false)
-      props.onRefresh()      
+      setIsDisplayAlert(true);
+      setAlertMessage(response.data.msg)
+      setTimeout(() => {
+        props.closePopup(false)
+       props.onRefresh()
+      }, 2000)     
     }    
   }
 
   return (
     <div>
+      <CToast
+        color="success"
+        autohide={false}
+        visible={isDisplayAlert}
+        className="align-items-center"
+        onClose={() => setIsDisplayAlert(false)}
+      >
+        <div className="d-flex">
+          <CToastBody>Hello, Admin! {alertMessage}.</CToastBody>
+          <CToastClose className="me-2 m-auto" />
+        </div>
+      </CToast>
+
       <CForm>
         <CRow className="mb-3">
           <CCol sm={6}>
@@ -50,7 +54,6 @@ const EditViewCoupon = (props) => {
               id="name"
               label="Name"
               value={couponName}
-              onChange={onCouponDetailsChange}
             />
           </CCol>
           <CCol sm={6}>
@@ -59,7 +62,6 @@ const EditViewCoupon = (props) => {
               id="discountPercentage"
               label="Discount Percentage"
               value={couponDiscountPercentage}
-              onChange={onCouponDetailsChange}
             />
           </CCol>
           <CCol sm={6}>
@@ -68,7 +70,6 @@ const EditViewCoupon = (props) => {
               id="expireyDate"
               label="Expirey Date"
               value={couponExpireyDate}
-              onChange={onCouponDetailsChange}
             />
           </CCol>
         </CRow>
@@ -77,19 +78,7 @@ const EditViewCoupon = (props) => {
             color="primary"
             variant="outline"
             className="me-3"
-            onClick={() => onSaveCouponClick()}
-            disabled={disableButton}
-          >
-            Save Coupon
-          </CButton>
-        </div>
-        <div className="text-center">
-          <CButton
-            color="primary"
-            variant="outline"
-            className="me-3"
             onClick={() => onDeleteCouponClick()}
-            //disabled={disableButton}
           >
             Delete Coupon
           </CButton>

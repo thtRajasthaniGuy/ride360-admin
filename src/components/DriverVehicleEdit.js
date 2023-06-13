@@ -28,7 +28,7 @@ const DriverVehicleEdit = (props) => {
   }, [])
 
   const getDriverVehicleDetails = async () => {
-    var url = 'http://localhost:4000/api/v1/admin-driver-vehicle-list/' + props.driverId
+    var url =  process.env.REACT_APP_URL + '/admin-driver-vehicle-list/' + props.driverId
     let response = await getDriverVehicleData('GET', url)
     if (response !== undefined && response.data.data) {
       setData(response.data.data[0])
@@ -151,7 +151,7 @@ const DriverVehicleEdit = (props) => {
         'Content-Type': 'multipart/form-data;',
       }
 
-      let url = 'http://localhost:4000/api/v1/admin-driver-vehicle-update'
+      let url = process.env.REACT_APP_URL + '/admin-driver-vehicle-update'
 
       let response = await updateDriverVehicleData('PUT', url, formData)
       if (response !== undefined) {

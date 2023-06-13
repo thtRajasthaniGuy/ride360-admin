@@ -78,7 +78,7 @@ const DriverDetailsEdit = (props) => {
           formData.append('dob', driverDob)
         }
 
-        let url = 'http://localhost:4000/api/v1/admin-driver-basic-update'
+        let url =  process.env.REACT_APP_URL + '/admin-driver-basic-update'
         let response = await driverBasicUpdate('PUT', url, formData)
 
         if (response !== undefined) {
@@ -97,7 +97,7 @@ const DriverDetailsEdit = (props) => {
   }
 
   const updateAccountStatus = async () => {
-    var url = 'http://localhost:4000/api/v1/driveraccountstatus'
+    var url = process.env.REACT_APP_URL + '/driveraccountstatus'
 
     let payload = {
       phoneNumber: props.selectedRowData.phoneNumber,

@@ -16,8 +16,7 @@ const DriverApprove = (props) => {
   }, [])
 
   const getDriverLicenseDetails = async () => {
-    var url =
-      'http://localhost:4000/api/v1/admin-driver-license-list/' + props.selectedRowData.phoneNumber
+    var url = process.env.REACT_APP_URL +'/admin-driver-license-list/'+ props.selectedRowData.phoneNumber
     let response = await getDriverLicenseData('GET', url)
     if (response !== undefined && response.status) {
       setDriverLicenseDetails(response.data.data[0])
@@ -25,8 +24,7 @@ const DriverApprove = (props) => {
   }
 
   const getDriverVehicleDetails = async () => {
-    var url =
-      'http://localhost:4000/api/v1/admin-driver-vehicle-list/' + props.selectedRowData.phoneNumber
+    var url = process.env.REACT_APP_URL +'/admin-driver-vehicle-list/' + props.selectedRowData.phoneNumber
     let response = await getDriverVehicleData('GET', url)
     if (response !== undefined && response.status) {
       setDriverVehicleDetails(response.data.data[0])

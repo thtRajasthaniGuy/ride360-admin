@@ -27,7 +27,7 @@ const DriverLicenseEdit = (props) => {
   }, [])
 
   const getDriverVehicleDetails = async () => {
-    var url = 'http://localhost:4000/api/v1/admin-driver-license-list/' + props.driverId
+    var url = process.env.REACT_APP_URL + '/admin-driver-license-list/' + props.driverId
     let response = await getDriverLicenseData('GET', url)
     if (response !== undefined && response.data.data) {
       setData(response.data.data[0])
@@ -141,7 +141,7 @@ const DriverLicenseEdit = (props) => {
         formData.append('insuranceImageURL', insuranceImageURL)
       }
 
-      let url = 'http://localhost:4000/api/v1/admin-driver-license-update'
+      let url = process.env.REACT_APP_URL + '/admin-driver-license-update'
 
       let response = await updateDriverLicenseData('PUT', url, formData)
       if (response !== undefined) {

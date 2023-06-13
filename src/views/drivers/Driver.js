@@ -81,6 +81,7 @@ const Driver = () => {
   const [alertMessage, setAlertMessage] = useState('')
 
   useEffect(() => {
+    console.log('process.env.REACT_APP_URL' + process.env.REACT_APP_URL)
     getDrivers()
   }, [refreshCmpData])
 
@@ -89,8 +90,7 @@ const Driver = () => {
       let name = nameSearch ? nameSearch : 'null'
       let email = emailSearch ? emailSearch : 'null'
       let phone = phoneSearch ? phoneSearch : 'null'
-      let url =
-        'http://localhost:4000/api/v1/admin-driver-filter-List/' + name + '/' + email + '/' + phone
+      let url = process.env.REACT_APP_URL + '/admin-driver-filter-List/' + name + '/' + phone + '/' + email
       let response = await getDriversData('GET', url)
       console.log(JSON.stringify(response))
       if (response !== undefined && response.status === 200) {
