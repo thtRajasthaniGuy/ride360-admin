@@ -78,7 +78,7 @@ const DriverDetailsEdit = (props) => {
           formData.append('dob', driverDob)
         }
 
-        let url =  process.env.REACT_APP_URL + '/admin-driver-basic-update'
+        let url = process.env.REACT_APP_URL + '/admin-driver-basic-update'
         let response = await driverBasicUpdate('PUT', url, formData)
 
         if (response !== undefined) {

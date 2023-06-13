@@ -57,13 +57,13 @@ const Coupon = () => {
   }, [refreshCouponData])
 
   const getCoupons = async () => {
-    let url = process.env.REACT_APP_URL +'/coupon'
+    let url = process.env.REACT_APP_URL + '/coupon'
     let response = await getCouponsData('GET', url)
     if (response !== undefined && response.status && response.data.data.length > 0) {
       setData(response.data.data)
-      setNotFoundData(false);
-    }else{
-      setNotFoundData(true);
+      setNotFoundData(false)
+    } else {
+      setNotFoundData(true)
       setAlertMessage('No Coupons is Available Yet.')
     }
   }

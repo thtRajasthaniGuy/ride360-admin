@@ -35,18 +35,17 @@ const AddCoupon = (props) => {
     let url = process.env.REACT_APP_URL + '/coupon'
     const response = await addNewCoupon('post', url, payload)
     if (response !== undefined && response.data) {
-      console.log(JSON.stringify( response))
-      setIsDisplayAlert(true);
+      console.log(JSON.stringify(response))
+      setIsDisplayAlert(true)
       setAlertMessage(response.data.msg)
       setTimeout(() => {
         props.closePopup(false)
-       props.onRefresh()
+        props.onRefresh()
       }, 2000)
-    }else if(response.message){
+    } else if (response.message) {
       setIsDisplayAlert(true)
       setAlertMessage(response.message)
-    }  
-
+    }
   }
 
   return (

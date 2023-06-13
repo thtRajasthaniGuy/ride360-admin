@@ -28,7 +28,7 @@ const DriverVehicleEdit = (props) => {
   }, [])
 
   const getDriverVehicleDetails = async () => {
-    var url =  process.env.REACT_APP_URL + '/admin-driver-vehicle-list/' + props.driverId
+    var url = process.env.REACT_APP_URL + '/admin-driver-vehicle-list/' + props.driverId
     let response = await getDriverVehicleData('GET', url)
     if (response !== undefined && response.data.data) {
       setData(response.data.data[0])

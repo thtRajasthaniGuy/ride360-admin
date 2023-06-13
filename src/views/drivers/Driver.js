@@ -90,7 +90,8 @@ const Driver = () => {
       let name = nameSearch ? nameSearch : 'null'
       let email = emailSearch ? emailSearch : 'null'
       let phone = phoneSearch ? phoneSearch : 'null'
-      let url = process.env.REACT_APP_URL + '/admin-driver-filter-List/' + name + '/' + phone + '/' + email
+      let url =
+        process.env.REACT_APP_URL + '/admin-driver-filter-List/' + name + '/' + phone + '/' + email
       let response = await getDriversData('GET', url)
       console.log(JSON.stringify(response))
       if (response !== undefined && response.status === 200) {

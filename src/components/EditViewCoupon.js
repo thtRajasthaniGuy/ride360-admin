@@ -22,13 +22,13 @@ const EditViewCoupon = (props) => {
     let url = process.env.REACT_APP_URL + '/coupon'
     const response = await deleteCoupon('delete', url, payload)
     if (response !== undefined && response.status) {
-      setIsDisplayAlert(true);
+      setIsDisplayAlert(true)
       setAlertMessage(response.data.msg)
       setTimeout(() => {
         props.closePopup(false)
-       props.onRefresh()
-      }, 2000)     
-    }    
+        props.onRefresh()
+      }, 2000)
+    }
   }
 
   return (
@@ -49,12 +49,7 @@ const EditViewCoupon = (props) => {
       <CForm>
         <CRow className="mb-3">
           <CCol sm={6}>
-            <CFormInput
-              type="text"
-              id="name"
-              label="Name"
-              value={couponName}
-            />
+            <CFormInput type="text" id="name" label="Name" value={couponName} />
           </CCol>
           <CCol sm={6}>
             <CFormInput
