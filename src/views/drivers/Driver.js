@@ -101,7 +101,7 @@ const Driver = () => {
           setNotFoundData(true)
           setAlertMessage(response.data.msg)
         }
-      } else if (response.hasOwnProperty('message')) {
+      }else if (response.hasOwnProperty('message')) {
         setNotFoundData(true)
         setAlertMessage(response.message)
       }

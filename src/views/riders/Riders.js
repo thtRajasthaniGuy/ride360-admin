@@ -60,7 +60,7 @@ const Rider = () => {
   }, [])
 
   const getRiders = async () => {
-    let url = 'http://localhost:4000/api/v1/admin-rider-list'
+    let url = process.env.REACT_APP_URL + '/admin-rider-list'
     let response = await getRidersData('GET', url)
     if (response !== undefined && response.status) {
       setData(response.data)
@@ -135,7 +135,7 @@ const Rider = () => {
     let name = nameSearch ? nameSearch : 'null'
     let email = emailSearch ? emailSearch : 'null'
     let phone = phoneSearch ? phoneSearch : 'null'
-    let url = 'http://localhost:4000/api/v1/admin-rider-filter-list/'+ name + '/' + email + '/' + phone
+    let url = process.env.REACT_APP_URL + '/admin-rider-filter-list/'+ name + '/' + email + '/' + phone
     axios.get(url)
     .then((response) => {
       console.log(response.data)

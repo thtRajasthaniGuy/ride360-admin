@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import { PropTypes } from 'prop-types'
 import axios from 'axios'
 import { CForm, CRow, CCol, CFormInput, CButton } from '@coreui/react'
+import { addRideFare } from 'src/utils/calloutHelper'
+import { CToast, CToastBody, CToastClose } from '@coreui/react'
 
 const AddRideFare = (props) => {
   const [state, setState] = useState()
@@ -16,6 +18,8 @@ const AddRideFare = (props) => {
   const [miniCarFare, setMiniCarFare] = useState()
   const [miniCarNightFare, setMiniCarNightFare] = useState()
   const [disableButton, setDisableButtonState] = useState(true)
+  const [isDisplayAlert, setIsDisplayAlert] = useState(false)
+  const [alertMessage, setAlertMessage] = useState('')
 
   const onRideFareChange = (event) => {
     setDisableButtonState(false)
@@ -53,13 +57,12 @@ const AddRideFare = (props) => {
       setMiniCarNightFare(event.target.value)
     }
   }
-  const onAddRideareClick = () => {
+  const onAddRideareClick = async () => {
     if (window.confirm('Are you sure to update Ride Fare details!')) {
       document.getElementById('onOkClick').style.display = 'none'
       document.getElementById('onCancleClick').style.display = 'none'
 
       let formData = new FormData()
-      //formData.append('id', props.selectedRowData?._id)
       formData.append('state', state)
       formData.append('city', city)
       formData.append('bikeDayFare', bikeDayFare)
@@ -72,19 +75,19 @@ const AddRideFare = (props) => {
       formData.append('miniCarFare', miniCarFare)
       formData.append('miniCarNightFare', miniCarNightFare)
 
-      const headers = {
-        'Content-Type': 'multipart/form-data;',
-      }
-
-      axios
-        .post('http://192.168.29.32:4000/api/v1/ride-fare-creation', formData, {
-          headers: headers,
-        })
-        .then((response) => {
-          console.log(response.data)
+      let url = process.env.REACT_APP_URL + '/ride-fare-creation'
+      let response = await addRideFare('POST', url, formData)
+      if (response !== undefined && response.data) {
+        setIsDisplayAlert(true)
+        setAlertMessage(response.data.msg)
+        setTimeout(() => {
           props.closePopup(false)
           props.onRefresh()
-        })
+        }, 2000)
+      }else if (response.hasOwnProperty('message')) {
+        setIsDisplayAlert(true)
+        setAlertMessage(response.message)
+      }
     } else {
       document.getElementById('onOkClick').style.display = 'none'
       document.getElementById('onCancleClick').style.display = 'none'
@@ -93,6 +96,19 @@ const AddRideFare = (props) => {
 
   return (
     <div>
+      <CToast
+        color="success"
+        autohide={false}
+        visible={isDisplayAlert}
+        className="align-items-center"
+        onClose={() => setIsDisplayAlert(false)}
+      >
+        <div className="d-flex">
+          <CToastBody>Hello, Admin! {alertMessage}.</CToastBody>
+          <CToastClose className="me-2 m-auto" />
+        </div>
+      </CToast>
+
       <CForm>
         <CRow className="mb-3">
           <CCol sm={6}>

@@ -5,11 +5,11 @@ import { DataTable } from 'src/components'
 import { RideFareDetailsEdit } from 'src/components'
 import { AddRideFare } from 'src/components'
 
-import { CButton } from '@coreui/react'
+import { CButton, CToast, CToastBody, CToastClose } from '@coreui/react'
 import { CModal, CModalHeader, CModalTitle, CModalBody, CModalFooter } from '@coreui/react'
 import { CForm, CNavbarBrand } from '@coreui/react'
 import { CFormInput, CCardHeader, CNavbar, CContainer, CFormSelect } from '@coreui/react'
-import { getRideFaresData } from 'src/utils/calloutHelper'
+import { getRideFaresData, searchRideFaresData } from 'src/utils/calloutHelper'
 
 const columns = [
   {
@@ -57,6 +57,8 @@ const RideFare = () => {
   const [citySearch, setCitySearch] = useState('')
   const [openAddNewRideFarePopup, setOpenAddNewRideFarePopup] = useState(false)
   const [refreshCmpData, setRefreshData] = useState(false)
+  const [isDisplayAlert, setIsDisplayAlert] = useState(false)
+  const [alertMessage, setAlertMessage] = useState('')
 
   const refreshData = () => {
     getRideFares()
@@ -69,10 +71,18 @@ const RideFare = () => {
   const getRideFares = async () => {
     let state = 'null'
     let city = 'null'
-    let url = 'http://localhost:4000/api/v1/ride-fare-list/' + state + '/' + city
+    let url = process.env.REACT_APP_URL + '/ride-fare-list/' + state + '/' + city
     let response = await getRideFaresData('GET', url)
-    if (response !== undefined && response.status) {
-      setData(response.data.data)
+    if (response !== undefined && response.status === 200) {
+      if (response.data.data) {
+        setData(response.data.data)
+      } else {
+        setIsDisplayAlert(true)
+        setAlertMessage(response.data.msg)
+      }
+    } else if (response.hasOwnProperty('message')) {
+      setIsDisplayAlert(true)
+      setAlertMessage(response.message)
     }
   }
 
@@ -114,22 +124,28 @@ const RideFare = () => {
   }
 
   const onSearchClick = async () => {
+    let url = process.env.REACT_APP_URL + '/ride-fare-list/' + stateSearch + '/' + citySearch
 
-    let url = 'http://localhost:4000/api/v1/ride-fare-list/'+ stateSearch + '/' + citySearch
-    axios.get(url)
-    .then((response) => {
-      console.log(response.data)
-      if(response.status){
+    let response = await searchRideFaresData('GET', url)
+    if (response !== undefined && response.status === 200) {
+      if (response.data.data) {
         setData(response.data.data)
+      } else {
+        setIsDisplayAlert(true)
+        setAlertMessage(response.message)
       }
-    })
-      
+    } else if (response.hasOwnProperty('message')) {
+      setIsDisplayAlert(true)
+      setAlertMessage(response.message)
+    }
   }
   const onResetClick = () => {
+    setIsDisplayAlert(false)
     setStateSearch('')
     setCitySearch('')
     setDisableButtonState(true)
     getRideFares()
+    
   }
   const onAddNewRideFareClick = () => {
     setOpenAddNewRideFarePopup(true)
@@ -209,6 +225,19 @@ const RideFare = () => {
         </CNavbar>
         <CNavbar colorScheme="light" className="bg-light"></CNavbar>
       </CCardHeader>
+      <CToast
+        color="warning"
+        autohide={false}
+        visible={isDisplayAlert}
+        className="align-items-center"
+        onClose={() => setIsDisplayAlert(false)}
+      >
+        <div className="d-flex">
+          <CToastBody>Hello, Admin! {alertMessage}.</CToastBody>
+          <CToastClose className="me-2 m-auto" />
+        </div>
+      </CToast>
+
       <DataTable columns={columns} items={rideFareData} />
       <Pagination
         totalPages={totalPages}

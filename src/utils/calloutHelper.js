@@ -32,6 +32,42 @@ const getRideFaresData = async (method, url) => {
   return result
 }
 
+const searchRideFaresData = async (method, url) => {
+  const result = await axios({
+    method: method,
+    url: url,
+  })
+    .then((response) => {
+      console.log('searchRideFaresData response :::====>>' + JSON.stringify(response))
+      return response
+    })
+    .catch((error) => {
+      console.log('searchRideFaresData error :::====>>' + JSON.stringify(error))
+      return error
+    })
+  return result
+}
+
+const addRideFare = async (method, url, payload) => {
+  const result = await axios({
+    method: method,
+    url: url,
+    data: payload,
+    headers: {
+      'Content-type': 'multipart/form-data;',
+    },
+  })
+    .then((response) => {
+      console.log('addRideFare response :::====>>' + JSON.stringify(response))
+      return response
+    })
+    .catch((error) => {
+      console.log('addRideFare error :::====>>' + JSON.stringify(error))
+      return error
+    })
+  return result
+}
+
 const getRidersData = async (method, url) => {
   const result = await axios({
     method: method,
@@ -157,7 +193,6 @@ const updateDriverAccountStatus = async (method, url, payload) => {
 }
 
 const driverBasicUpdate = async (method, url, payload) => {
-
   const result = await axios({
     method: method,
     url: url,
@@ -178,7 +213,6 @@ const driverBasicUpdate = async (method, url, payload) => {
 }
 
 const updateDriverVehicleData = async (method, url, payload) => {
-
   const result = await axios({
     method: method,
     url: url,
@@ -199,7 +233,6 @@ const updateDriverVehicleData = async (method, url, payload) => {
 }
 
 const updateDriverLicenseData = async (method, url, payload) => {
-
   const result = await axios({
     method: method,
     url: url,
@@ -219,7 +252,6 @@ const updateDriverLicenseData = async (method, url, payload) => {
   return result
 }
 
-
 export {
   getDriversData,
   getRideFaresData,
@@ -232,5 +264,7 @@ export {
   updateDriverAccountStatus,
   driverBasicUpdate,
   updateDriverVehicleData,
-  updateDriverLicenseData
+  updateDriverLicenseData,
+  searchRideFaresData,
+  addRideFare
 }
