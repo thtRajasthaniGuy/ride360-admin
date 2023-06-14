@@ -4,6 +4,7 @@ import axios from 'axios'
 import { CCol, CRow, CCard, CCardBody, CFormInput, CButton } from '@coreui/react'
 import { getDriverLicenseData, updateDriverLicenseData } from 'src/utils/calloutHelper'
 import { CToast, CToastBody, CToastClose } from '@coreui/react'
+import { NotificationAlert } from 'src/components'
 
 const DriverLicenseEdit = (props) => {
   const [driverLicenseData, setDriverLicenseData] = useState('')
@@ -19,8 +20,9 @@ const DriverLicenseEdit = (props) => {
   const [licenseBackImageURL, setLicenseBackImageURL] = useState('')
   const [selfieWithDLURL, setSelfieWithDLURL] = useState('')
   const [insuranceImageURL, setInsuranceImageURL] = useState('')
-  const [isDisplay, setIsDisplay] = useState(false)
-  const [displayMessage, setDisplayMessage] = useState('')
+  const [isDisplayAlert, setIsDisplayAlert] = useState(false)
+  const [alertMessage, setAlertMessage] = useState('')
+  const [alertcolor, setAlertcolor] = useState('')
 
   useEffect(() => {
     getDriverVehicleDetails()
@@ -32,8 +34,9 @@ const DriverLicenseEdit = (props) => {
     if (response !== undefined && response.data.data) {
       setData(response.data.data[0])
     } else {
-      setIsDisplay(true)
-      setDisplayMessage(response.data.msg)
+      setIsDisplayAlert(true)
+      setAlertMessage(response.data.msg)
+      setAlertcolor('warning')
     }
   }
 
@@ -145,8 +148,9 @@ const DriverLicenseEdit = (props) => {
 
       let response = await updateDriverLicenseData('PUT', url, formData)
       if (response !== undefined) {
-        setIsDisplay(true)
-        setDisplayMessage(response.data.msg)
+        setIsDisplayAlert(true)
+        setAlertMessage(response.data.msg)
+        setAlertcolor('success')
         setTimeout(() => {
           props.closePopup(false)
         }, 2000)
@@ -159,14 +163,13 @@ const DriverLicenseEdit = (props) => {
 
   return (
     <div>
-      {driverLicenseData == '' || isDisplay ? (
+      {driverLicenseData == '' || isDisplayAlert ? (
         <div>
-          <CToast visible={true} color="success" className="align-items-center">
-            <div className="d-flex">
-              <CToastBody>Hello, Admin! {displayMessage}.</CToastBody>
-              <CToastClose className="me-2 m-auto" />
-            </div>
-          </CToast>
+          <NotificationAlert
+            color={alertcolor}
+            isDisplayAlert={isDisplayAlert}
+            alertMessage={alertMessage}
+          />
         </div>
       ) : (
         <CRow>

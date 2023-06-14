@@ -3,7 +3,7 @@ import { CCardHeader, CNavbar, CContainer, CNavbarBrand } from '@coreui/react'
 import { CForm, CFormInput, CButton, CFormSelect, CCol } from '@coreui/react'
 import { CModal, CModalHeader, CModalTitle, CModalBody, CRow, CFormLabel } from '@coreui/react'
 import axios from 'axios'
-import { DataTable } from 'src/components'
+import { DataTable, NotificationAlert } from 'src/components'
 import { Pagination } from 'src/components'
 import { getRidersData } from 'src/utils/calloutHelper'
 
@@ -54,6 +54,9 @@ const Rider = () => {
   const [openEditDetailsPopup, setOpenEditDetailsPopup] = useState(false)
   const [selectedRowData, setSelectedRowData] = useState(null)
   const [selectValue, setSelectValue] = useState('')
+  const [isDisplayAlert, setIsDisplayAlert] = useState(false)
+  const [alertMessage, setAlertMessage] = useState('')
+  const [alertcolor, setAlertcolor] = useState('')
 
   useEffect(() => {
     getRiders()
@@ -62,8 +65,18 @@ const Rider = () => {
   const getRiders = async () => {
     let url = process.env.REACT_APP_URL + '/admin-rider-list'
     let response = await getRidersData('GET', url)
-    if (response !== undefined && response.status) {
-      setData(response.data)
+    if (response !== undefined && response.data) {
+      if (response.data.length > 0) {
+        setData(response.data)
+      } else {
+        setIsDisplayAlert(true)
+        setAlertMessage('No Riders.')
+        setAlertcolor('warning')
+      }
+    } else if (response.hasOwnProperty('message')) {
+      setIsDisplayAlert(true)
+      setAlertMessage(response.message)
+      setAlertcolor('warning')
     }
   }
 
@@ -128,24 +141,22 @@ const Rider = () => {
     setDisableButtonState(false)
   }
   const onSearchClick = () => {
-
     setStartIndex(0)
     setCurrentPage(1)
     setTotalPages(0)
     let name = nameSearch ? nameSearch : 'null'
     let email = emailSearch ? emailSearch : 'null'
     let phone = phoneSearch ? phoneSearch : 'null'
-    let url = process.env.REACT_APP_URL + '/admin-rider-filter-list/'+ name + '/' + email + '/' + phone
-    axios.get(url)
-    .then((response) => {
+    let url =
+      process.env.REACT_APP_URL + '/admin-rider-filter-list/' + name + '/' + email + '/' + phone
+    axios.get(url).then((response) => {
       console.log(response.data)
       console.log(response.status)
-      if(response.status){        
+      if (response.status) {
         console.log(response.data.data)
         setData(response.data.data)
       }
     })
-
   }
   const onResetClick = () => {
     setNameSearch('')
@@ -197,6 +208,11 @@ const Rider = () => {
 
   return (
     <div className="card">
+      <NotificationAlert
+        color={alertcolor}
+        isDisplayAlert={isDisplayAlert}
+        alertMessage={alertMessage}
+      />
       <CModal
         size="lg"
         visible={openEditDetailsPopup}

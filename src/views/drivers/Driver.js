@@ -5,7 +5,7 @@ import { DriverDetailsEdit } from 'src/components'
 import { DriverVehicleEdit } from 'src/components'
 import { DriverLicenseEdit } from 'src/components'
 import { DriverApprove } from 'src/components'
-import { Pagination } from 'src/components'
+import { Pagination, NotificationAlert } from 'src/components'
 import { CCardHeader, CNavbar, CContainer, CNavbarBrand, CModalTitle } from '@coreui/react'
 import { CForm, CFormInput, CButton, CFormSelect, CModal, CModalHeader } from '@coreui/react'
 import { CModalBody, CModalFooter, CToast, CToastBody, CToastClose } from '@coreui/react'
@@ -77,8 +77,9 @@ const Driver = () => {
   const [openEditVehiclePopup, setEditVehiclePopup] = useState(false)
   const [openDriverApprovePopup, setOpenDriverApprovePopup] = useState(false)
   const [refreshCmpData, setRefreshData] = useState(false)
-  const [notFoundData, setNotFoundData] = useState(false)
+  const [isDisplayAlert, setIsDisplayAlert] = useState(false)
   const [alertMessage, setAlertMessage] = useState('')
+  const [alertcolor, setAlertcolor] = useState('')
 
   useEffect(() => {
     console.log('process.env.REACT_APP_URL' + process.env.REACT_APP_URL)
@@ -98,18 +99,21 @@ const Driver = () => {
         if (response.data.data) {
           setData(response.data.data)
         } else {
-          setNotFoundData(true)
+          setIsDisplayAlert(true)
           setAlertMessage(response.data.msg)
+          setAlertcolor('warning')
         }
-      }else if (response.hasOwnProperty('message')) {
-        setNotFoundData(true)
+      } else if (response.hasOwnProperty('message')) {
+        setIsDisplayAlert(true)
         setAlertMessage(response.message)
+        setAlertcolor('warning')
       }
     } catch (error) {
       console.log('getDrivers error :::====>>' + error)
       setDriversData('')
-      setNotFoundData(true)
+      setIsDisplayAlert(true)
       setAlertMessage(error)
+      setAlertcolor('warning')
     }
   }
 
@@ -205,7 +209,7 @@ const Driver = () => {
     setDisableButton(false)
   }
   const onSearchClick = () => {
-    setNotFoundData(false)
+    setIsDisplayAlert(false)
     setStartIndex(0)
     setCurrentPage(1)
     setTotalPages(0)
@@ -217,7 +221,7 @@ const Driver = () => {
     setEmailSearch('')
     setPhoneSearch('')
     setDisableButton(true)
-    setNotFoundData(false)
+    setIsDisplayAlert(false)
     setCurrentPage(1)
     setTotalPages(tempDriversData.length / recordPerPage)
     setDriversData(tempDriversData.slice(0, 0 + recordPerPage))
@@ -302,19 +306,11 @@ const Driver = () => {
         <CNavbar colorScheme="light" className="bg-light"></CNavbar>
       </CCardHeader>
 
-      <CToast
-        color="warning"
-        autohide={false}
-        visible={notFoundData}
-        className="align-items-center"
-        onClose={() => setNotFoundData(false)}
-      >
-        <div className="d-flex">
-          <CToastBody>Hello, Admin! {alertMessage}.</CToastBody>
-          <CToastClose className="me-2 m-auto" />
-        </div>
-      </CToast>
-
+      <NotificationAlert
+        color={alertcolor}
+        isDisplayAlert={isDisplayAlert}
+        alertMessage={alertMessage}
+      />
       <DataTable columns={columns} items={driversData} />
       <Pagination
         totalPages={totalPages}

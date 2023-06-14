@@ -4,6 +4,7 @@ import axios from 'axios'
 import { CForm, CRow, CCol, CFormInput, CButton } from '@coreui/react'
 import { addNewCoupon } from 'src/utils/calloutHelper'
 import { CToast, CToastBody, CToastClose } from '@coreui/react'
+import { NotificationAlert } from 'src/components'
 
 const AddCoupon = (props) => {
   const [disableButton, setDisableButtonState] = useState(true)
@@ -12,6 +13,7 @@ const AddCoupon = (props) => {
   const [couponExpireyDate, setCouponExpireyDate] = useState('')
   const [isDisplayAlert, setIsDisplayAlert] = useState(false)
   const [alertMessage, setAlertMessage] = useState('')
+  const [alertcolor, setAlertcolor] = useState('')
 
   const onCouponDetailsChange = (event) => {
     setDisableButtonState(false)
@@ -38,6 +40,7 @@ const AddCoupon = (props) => {
       console.log(JSON.stringify(response))
       setIsDisplayAlert(true)
       setAlertMessage(response.data.msg)
+      setAlertcolor('success')
       setTimeout(() => {
         props.closePopup(false)
         props.onRefresh()
@@ -45,23 +48,17 @@ const AddCoupon = (props) => {
     } else if (response.message) {
       setIsDisplayAlert(true)
       setAlertMessage(response.message)
+      setAlertcolor('warning')
     }
   }
 
   return (
     <div>
-      <CToast
-        color="success"
-        autohide={true}
-        visible={isDisplayAlert}
-        className="align-items-center"
-        onClose={() => setIsDisplayAlert(false)}
-      >
-        <div className="d-flex">
-          <CToastBody>Hello, Admin! {alertMessage}.</CToastBody>
-          <CToastClose className="me-2 m-auto" />
-        </div>
-      </CToast>
+      <NotificationAlert
+        color={alertcolor}
+        isDisplayAlert={isDisplayAlert}
+        alertMessage={alertMessage}
+      />
 
       <CForm>
         <CRow className="mb-3">

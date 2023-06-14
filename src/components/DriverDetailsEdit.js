@@ -5,6 +5,7 @@ import { CForm, CRow, CFormLabel, CCol } from '@coreui/react'
 import { CFormInput, CButton, CFormSelect } from '@coreui/react'
 import { updateDriverAccountStatus, driverBasicUpdate } from 'src/utils/calloutHelper'
 import { CToast, CToastBody, CToastClose } from '@coreui/react'
+import { NotificationAlert } from 'src/components'
 
 const accountStatusOptions = [
   {
@@ -31,8 +32,9 @@ const DriverDetailsEdit = (props) => {
   const [driverEmail, setDriverEmail] = useState(props.selectedRowData.email)
   const [driverDob, setDriverDob] = useState(props.selectedRowData.dob)
   const [accountStatus, setAccountStatus] = useState(props.selectedRowData.accountStatus)
-  const [isUpdateSuccessFully, setIsUpdateSuccessFully] = useState(false)
-  const [displayMessage, setDisplayMessage] = useState('')
+  const [isDisplayAlert, setIsDisplayAlert] = useState(false)
+  const [alertMessage, setAlertMessage] = useState('')
+  const [alertcolor, setAlertcolor] = useState('')
 
   const onNameChange = (e) => {
     console.log(e.target.value)
@@ -82,8 +84,9 @@ const DriverDetailsEdit = (props) => {
         let response = await driverBasicUpdate('PUT', url, formData)
 
         if (response !== undefined) {
-          setIsUpdateSuccessFully(true)
-          setDisplayMessage(response.data.msg)
+          setIsDisplayAlert(true)
+          setAlertMessage(response.data.msg)
+          setAlertcolor('success')
           props.onRefresh()
           setTimeout(() => {
             props.closePopup(false)
@@ -106,8 +109,9 @@ const DriverDetailsEdit = (props) => {
 
     let response = await updateDriverAccountStatus('POST', url, payload)
     if (response !== undefined && response.status) {
-      setIsUpdateSuccessFully(true)
-      setDisplayMessage('Driver Account ' + response.data.msg)
+      setIsDisplayAlert(true)
+      setAlertMessage('Driver Account ' + response.data.msg)
+      setAlertcolor('success')
       props.onRefresh()
       setTimeout(() => {
         props.closePopup(false)
@@ -118,17 +122,11 @@ const DriverDetailsEdit = (props) => {
   return (
     <div>
       <CForm>
-        <CToast
-          autohide={true}
-          visible={isUpdateSuccessFully}
-          color="success"
-          className="align-items-center"
-        >
-          <div className="d-flex">
-            <CToastBody>Hello, Admin! {displayMessage}.</CToastBody>
-            <CToastClose className="me-2 m-auto" />
-          </div>
-        </CToast>
+        <NotificationAlert
+          color={alertcolor}
+          isDisplayAlert={isDisplayAlert}
+          alertMessage={alertMessage}
+        />
         <CRow className="mb-3">
           <CFormLabel htmlFor="inputEmail3" className="col-sm-2 col-form-label">
             Name

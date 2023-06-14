@@ -5,7 +5,7 @@ import { CButton, CForm, CNavbarBrand } from '@coreui/react'
 import { CFormInput, CCardHeader, CNavbar, CContainer, CFormSelect } from '@coreui/react'
 import { CModal, CModalHeader, CModalTitle, CModalBody, CModalFooter } from '@coreui/react'
 import { getCouponsData } from 'src/utils/calloutHelper'
-import { CToast, CToastBody, CToastClose } from '@coreui/react'
+import { NotificationAlert } from 'src/components'
 
 const columns = [
   {
@@ -45,8 +45,9 @@ const Coupon = () => {
   const [openAddCouponPopup, setOpenAddCouponPopup] = useState(false)
   const [openEditViewCouponPopup, setOpenEditViewCouponPopup] = useState(false)
   const [refreshCouponData, setRefreshCouponData] = useState(false)
-  const [notFoundData, setNotFoundData] = useState(false)
+  const [isDisplayAlert, setIsDisplayAlert] = useState(false)
   const [alertMessage, setAlertMessage] = useState('')
+  const [alertcolor, setAlertcolor] = useState('')
 
   const refreshData = () => {
     setRefreshCouponData(!refreshCouponData)
@@ -61,10 +62,11 @@ const Coupon = () => {
     let response = await getCouponsData('GET', url)
     if (response !== undefined && response.status && response.data.data.length > 0) {
       setData(response.data.data)
-      setNotFoundData(false)
+      setIsDisplayAlert(false)
     } else {
-      setNotFoundData(true)
+      setIsDisplayAlert(true)
       setAlertMessage('No Coupons is Available Yet.')
+      setAlertcolor('warning')
     }
   }
 
@@ -180,18 +182,11 @@ const Coupon = () => {
         </CNavbar>
         <CNavbar colorScheme="light" className="bg-light"></CNavbar>
       </CCardHeader>
-      <CToast
-        color="warning"
-        autohide={false}
-        visible={notFoundData}
-        className="align-items-center"
-        onClose={() => setNotFoundData(false)}
-      >
-        <div className="d-flex">
-          <CToastBody>Hello, Admin! {alertMessage}.</CToastBody>
-          <CToastClose className="me-2 m-auto" />
-        </div>
-      </CToast>
+      <NotificationAlert
+        color={alertcolor}
+        isDisplayAlert={isDisplayAlert}
+        alertMessage={alertMessage}
+      />
       <DataTable columns={columns} items={couponData} />
       <Pagination
         totalPages={totalPages}

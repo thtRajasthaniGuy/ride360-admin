@@ -266,5 +266,5 @@ export {
   updateDriverVehicleData,
   updateDriverLicenseData,
   searchRideFaresData,
-  addRideFare
+  addRideFare,
 }

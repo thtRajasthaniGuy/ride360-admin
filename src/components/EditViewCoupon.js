@@ -3,7 +3,7 @@ import { PropTypes } from 'prop-types'
 import axios from 'axios'
 import { CForm, CRow, CCol, CFormInput, CButton } from '@coreui/react'
 import { deleteCoupon } from 'src/utils/calloutHelper'
-import { CToast, CToastBody, CToastClose } from '@coreui/react'
+import { NotificationAlert } from 'src/components'
 
 const EditViewCoupon = (props) => {
   const [disableButton, setDisableButtonState] = useState(true)
@@ -14,6 +14,7 @@ const EditViewCoupon = (props) => {
   const [couponExpireyDate, setCouponExpireyDate] = useState(props.selectedRowData.expireyDate)
   const [isDisplayAlert, setIsDisplayAlert] = useState(false)
   const [alertMessage, setAlertMessage] = useState('')
+  const [alertcolor, setAlertcolor] = useState('')
 
   const onDeleteCouponClick = async () => {
     let payload = {
@@ -24,6 +25,7 @@ const EditViewCoupon = (props) => {
     if (response !== undefined && response.status) {
       setIsDisplayAlert(true)
       setAlertMessage(response.data.msg)
+      setAlertcolor('success')
       setTimeout(() => {
         props.closePopup(false)
         props.onRefresh()
@@ -33,18 +35,11 @@ const EditViewCoupon = (props) => {
 
   return (
     <div>
-      <CToast
-        color="success"
-        autohide={false}
-        visible={isDisplayAlert}
-        className="align-items-center"
-        onClose={() => setIsDisplayAlert(false)}
-      >
-        <div className="d-flex">
-          <CToastBody>Hello, Admin! {alertMessage}.</CToastBody>
-          <CToastClose className="me-2 m-auto" />
-        </div>
-      </CToast>
+      <NotificationAlert
+        color={alertcolor}
+        isDisplayAlert={isDisplayAlert}
+        alertMessage={alertMessage}
+      />
 
       <CForm>
         <CRow className="mb-3">
