@@ -68,6 +68,26 @@ const addRideFare = async (method, url, payload) => {
   return result
 }
 
+const updateRideFaresData = async (method, url, payload) => {
+  const result = await axios({
+    method: method,
+    url: url,
+    data: payload,
+    headers: {
+      'Content-type': 'multipart/form-data;',
+    },
+  })
+    .then((response) => {
+      console.log('updateRideFaresData response :::====>>' + JSON.stringify(response))
+      return response
+    })
+    .catch((error) => {
+      console.log('updateRideFaresData error :::====>>' + JSON.stringify(error))
+      return error
+    })
+  return result
+}
+
 const getRidersData = async (method, url) => {
   const result = await axios({
     method: method,
@@ -252,6 +272,39 @@ const updateDriverLicenseData = async (method, url, payload) => {
   return result
 }
 
+const getInviteReferralHistoryData = async (method, url) => {
+  const result = await axios({
+    method: method,
+    url: url,
+  })
+    .then((response) => {
+      console.log('getInviteReferralHistoryData response :::====>>' + JSON.stringify(response))
+      return response
+    })
+    .catch((error) => {
+      console.log('getInviteReferralHistoryData error :::====>>' + JSON.stringify(error))
+      return error
+    })
+  return result
+}
+
+const getRideHistoryData = async (method, url, payload) => {
+
+  const result = await axios({
+    method: method,
+    url: url
+  })
+    .then((response) => {
+      console.log('getRideHistoryData response :::====>>' + JSON.stringify(response))
+      return response
+    })
+    .catch((error) => {
+      console.log('getRideHistoryData error :::====>>' + JSON.stringify(error))
+      return error
+    })
+  return result
+}
+
 export {
   getDriversData,
   getRideFaresData,
@@ -267,4 +320,7 @@ export {
   updateDriverLicenseData,
   searchRideFaresData,
   addRideFare,
+  updateRideFaresData,
+  getInviteReferralHistoryData,
+  getRideHistoryData
 }

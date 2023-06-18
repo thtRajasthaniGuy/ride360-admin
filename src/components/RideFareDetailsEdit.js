@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { PropTypes } from 'prop-types'
-import axios from 'axios'
 import { CForm, CRow, CCol, CFormInput, CButton } from '@coreui/react'
+import { updateRideFaresData } from 'src/utils/calloutHelper'
+import { NotificationAlert } from 'src/components'
 
 const RideFareDetailsEdit = (props) => {
   const [selectedRowData, setSelectedRowData] = useState(props?.selectedRowData)
@@ -19,6 +20,9 @@ const RideFareDetailsEdit = (props) => {
   const [miniCarFare, setMiniCarFare] = useState(props.selectedRowData?.miniCarFare)
   const [miniCarNightFare, setMiniCarNightFare] = useState(props.selectedRowData?.miniCarNightFare)
   const [disableButton, setDisableButtonState] = useState(true)
+  const [isDisplayAlert, setIsDisplayAlert] = useState(false)
+  const [alertMessage, setAlertMessage] = useState('')
+  const [alertcolor, setAlertcolor] = useState('')
 
   const onRideFareChange = (event) => {
     setDisableButtonState(false)
@@ -59,7 +63,8 @@ const RideFareDetailsEdit = (props) => {
       selectedRowData.miniCarNightFare = event.target.value
     }
   }
-  const onUpdateDetailsClick = () => {
+
+  const onUpdateDetailsClick = async () => {
     if (window.confirm('Are you sure to update Ride Fare details!')) {
       document.getElementById('onOkClick').style.display = 'none'
       document.getElementById('onCancleClick').style.display = 'none'
@@ -78,18 +83,22 @@ const RideFareDetailsEdit = (props) => {
       formData.append('miniCarFare', miniCarFare)
       formData.append('miniCarNightFare', miniCarNightFare)
 
-      const headers = {
-        'Content-Type': 'multipart/form-data;',
-      }
-      axios
-        .put('http://192.168.29.32:4000/api/v1/ride-fare-update', formData, {
-          headers: headers,
-        })
-        .then((response) => {
-          console.log(response.data)
-          props.closePopup(false)
+      let url = process.env.REACT_APP_URL + '/ride-fare-update'
+
+      let response = await updateRideFaresData('PUT', url, formData)
+      if (response != undefined && response.data) {
+        setIsDisplayAlert(true)
+        setAlertMessage(response.data.msg)
+        setAlertcolor('success')
+        setTimeout(() => {
           props.onRefresh()
-        })
+          props.closePopup(false)
+        }, 2000)
+      } else if (response.hasOwnProperty('message')) {
+        setIsDisplayAlert(true)
+        setAlertMessage(response.message)
+        setAlertcolor('warning')
+      }
     } else {
       document.getElementById('onOkClick').style.display = 'none'
       document.getElementById('onCancleClick').style.display = 'none'
@@ -99,6 +108,11 @@ const RideFareDetailsEdit = (props) => {
   return (
     <div>
       <CForm>
+        <NotificationAlert
+          color={alertcolor}
+          isDisplayAlert={isDisplayAlert}
+          alertMessage={alertMessage}
+        />
         <CRow className="mb-3">
           <CCol sm={6}>
             <CFormInput

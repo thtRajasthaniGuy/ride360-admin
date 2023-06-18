@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
 import { DataTable } from 'src/components'
 import { DriverDetailsEdit } from 'src/components'
 import { DriverVehicleEdit } from 'src/components'
 import { DriverLicenseEdit } from 'src/components'
 import { DriverApprove } from 'src/components'
-import { Pagination, NotificationAlert } from 'src/components'
+import { Pagination, NotificationAlert, RideHistory } from 'src/components'
 import { CCardHeader, CNavbar, CContainer, CNavbarBrand, CModalTitle } from '@coreui/react'
 import { CForm, CFormInput, CButton, CFormSelect, CModal, CModalHeader } from '@coreui/react'
 import { CModalBody, CModalFooter, CToast, CToastBody, CToastClose } from '@coreui/react'
@@ -80,6 +79,8 @@ const Driver = () => {
   const [isDisplayAlert, setIsDisplayAlert] = useState(false)
   const [alertMessage, setAlertMessage] = useState('')
   const [alertcolor, setAlertcolor] = useState('')
+
+  const [openRideHistoryPopup, setRideHistoryPopup] = useState(false)
 
   useEffect(() => {
     console.log('process.env.REACT_APP_URL' + process.env.REACT_APP_URL)
@@ -242,7 +243,12 @@ const Driver = () => {
     setEditVehiclePopup(true)
     setDisableButton(true)
   }
+  const onViewRideHistoryClick = () => {
+    setActionPopup(false)
+    setRideHistoryPopup(true)
+  }
 
+    
   return (
     <div className="card">
       <CCardHeader>
@@ -354,6 +360,16 @@ const Driver = () => {
             >
               Edit Vehicle
             </CButton>
+
+            <CButton
+              size="lg"
+              color="primary"
+              variant="outline"
+              className="me-4"
+              onClick={() => onViewRideHistoryClick()}
+            >
+              View Ride History
+            </CButton>
           </div>
         </CModalBody>
         <CModalFooter></CModalFooter>
@@ -419,6 +435,19 @@ const Driver = () => {
         </CModalBody>
         <CModalFooter></CModalFooter>
       </CModal>
+
+      <CModal size="lg" visible={openRideHistoryPopup} onClose={() => setRideHistoryPopup(false)}>
+        <CModalHeader>
+          <CModalTitle>Ride History </CModalTitle>
+        </CModalHeader>
+        <CModalBody>
+          <div className="text-center">
+          <RideHistory phoneNumber={selectedRowData?.phoneNumber}> </RideHistory>
+          </div>
+        </CModalBody>
+        <CModalFooter></CModalFooter>
+      </CModal>
+
     </div>
   )
 }

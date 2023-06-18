@@ -74,6 +74,16 @@ const _nav = [
     to: '/riders/Riders',
     icon: <CIcon icon={cilCarAlt} customClassName="nav-icon" />,
   },
+  {
+    component: CNavTitle,
+    name: 'Referral Type',
+  },
+  {
+    component: CNavItem,
+    name: 'Referral Type',
+    to: '/referralHistory/ReferralHistory',
+    icon: <CIcon icon={cilCarAlt} customClassName="nav-icon" />,
+  },
   /*{
     component: CNavTitle,
     name: 'Extras',
