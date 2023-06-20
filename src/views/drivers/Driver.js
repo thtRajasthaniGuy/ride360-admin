@@ -1,13 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import { DataTable } from 'src/components'
-import { DriverDetailsEdit } from 'src/components'
-import { DriverVehicleEdit } from 'src/components'
-import { DriverLicenseEdit } from 'src/components'
-import { DriverApprove } from 'src/components'
-import { Pagination, NotificationAlert, RideHistory } from 'src/components'
+import { DataTable, Pagination, NotificationAlert } from 'src/components'
+import { DriverDetailsEdit, DriverVehicleEdit, DriverLicenseEdit } from 'src/components'
+import { DriverApprove, RideHistory } from 'src/components'
 import { CCardHeader, CNavbar, CContainer, CNavbarBrand, CModalTitle } from '@coreui/react'
 import { CForm, CFormInput, CButton, CFormSelect, CModal, CModalHeader } from '@coreui/react'
-import { CModalBody, CModalFooter, CToast, CToastBody, CToastClose } from '@coreui/react'
+import { CModalBody, CModalFooter } from '@coreui/react'
 import { getDriversData } from 'src/utils/calloutHelper'
 
 const columns = [
@@ -248,7 +245,6 @@ const Driver = () => {
     setRideHistoryPopup(true)
   }
 
-    
   return (
     <div className="card">
       <CCardHeader>
@@ -442,12 +438,15 @@ const Driver = () => {
         </CModalHeader>
         <CModalBody>
           <div className="text-center">
-          <RideHistory phoneNumber={selectedRowData?.phoneNumber}> </RideHistory>
+            <RideHistory
+              phoneNumber={selectedRowData?.phoneNumber}
+              isDriverHistory={true}
+              isRiderHistory={false}
+            ></RideHistory>
           </div>
         </CModalBody>
         <CModalFooter></CModalFooter>
       </CModal>
-
     </div>
   )
 }

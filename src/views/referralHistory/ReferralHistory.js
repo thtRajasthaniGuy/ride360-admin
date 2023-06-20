@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { getInviteReferralHistoryData } from 'src/utils/calloutHelper'
 import { DataTable, NotificationAlert, Pagination } from 'src/components'
+import { CCardHeader, CNavbar, CContainer, CNavbarBrand, CModalTitle } from '@coreui/react'
 
 const columns = [
   {
@@ -104,6 +105,10 @@ const ReferralHistory = (props) => {
 
   return (
     <div className="card">
+      <CCardHeader>
+        <strong>Referral History</strong>
+      </CCardHeader>
+
       <NotificationAlert
         color={alertcolor}
         isDisplayAlert={isDisplayAlert}

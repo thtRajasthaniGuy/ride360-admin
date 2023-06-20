@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { CCardHeader, CNavbar, CContainer, CNavbarBrand } from '@coreui/react'
-import { CForm, CFormInput, CButton, CFormSelect, CCol } from '@coreui/react'
+import { CForm, CFormInput, CButton, CFormSelect, CCol, CModalFooter } from '@coreui/react'
 import { CModal, CModalHeader, CModalTitle, CModalBody, CRow, CFormLabel } from '@coreui/react'
 import axios from 'axios'
 import { DataTable, NotificationAlert } from 'src/components'
-import { Pagination } from 'src/components'
+import { Pagination ,RideHistory } from 'src/components'
 import { getRidersData } from 'src/utils/calloutHelper'
 
 const columns = [
@@ -38,6 +38,11 @@ const columns = [
     label: 'Action',
     _props: { scope: 'col' },
   },
+  {
+    key: 'rideHistory',
+    label: 'Ride History',
+    _props: { scope: 'col' },
+  },
 ]
 
 const Rider = () => {
@@ -58,24 +63,32 @@ const Rider = () => {
   const [alertMessage, setAlertMessage] = useState('')
   const [alertcolor, setAlertcolor] = useState('')
 
+  const [openRideHistoryPopup, setRideHistoryPopup] = useState(false)
+
   useEffect(() => {
     getRiders()
   }, [])
 
   const getRiders = async () => {
-    let url = process.env.REACT_APP_URL + '/admin-rider-list'
-    let response = await getRidersData('GET', url)
-    if (response !== undefined && response.data) {
-      if (response.data.length > 0) {
-        setData(response.data)
-      } else {
+    try {
+      let url = process.env.REACT_APP_URL + '/admin-rider-list'
+      let response = await getRidersData('GET', url)
+      if (response !== undefined && response.data) {
+        if (response.data.length > 0) {
+          setData(response.data)
+        } else {
+          setIsDisplayAlert(true)
+          setAlertMessage('No Riders.')
+          setAlertcolor('warning')
+        }
+      } else if (response.hasOwnProperty('message')) {
         setIsDisplayAlert(true)
-        setAlertMessage('No Riders.')
+        setAlertMessage(response.message)
         setAlertcolor('warning')
       }
-    } else if (response.hasOwnProperty('message')) {
+    } catch (error) {
       setIsDisplayAlert(true)
-      setAlertMessage(response.message)
+      setAlertMessage(error)
       setAlertcolor('warning')
     }
   }
@@ -113,6 +126,18 @@ const Rider = () => {
           Edit
         </CButton>
       )
+      record.rideHistory = (
+        <CButton
+          type="submit"
+          className="me-2"
+          color="primary"
+          variant="outline"
+          onClick={() => onViewRideHistoryClick(record)}
+        >
+          View Ride History
+        </CButton>
+      )
+
       count++
     })
     setTotalPages(records.length / recordPerPage)
@@ -125,6 +150,13 @@ const Rider = () => {
     setSelectedRowData(obj)
     setSelectValue(obj.status)
   }
+
+  const onViewRideHistoryClick = (obj) => {
+    setSelectedRowData(obj)
+    setRideHistoryPopup(true)
+  }
+  
+
   const onSearchChange = (event) => {
     if (event.target.id === 'nameInput') {
       setNameSearch(event.target.value)
@@ -282,6 +314,23 @@ const Rider = () => {
           </div>
         </CModalBody>
       </CModal>
+
+      <CModal size="lg" visible={openRideHistoryPopup} onClose={() => setRideHistoryPopup(false)}>
+        <CModalHeader>
+          <CModalTitle>Ride History </CModalTitle>
+        </CModalHeader>
+        <CModalBody>
+          <div className="text-center">
+            <RideHistory
+              phoneNumber={selectedRowData?.phoneNumber}
+              isDriverHistory={false}
+              isRiderHistory={true}
+            ></RideHistory>
+          </div>
+        </CModalBody>
+        <CModalFooter></CModalFooter>
+      </CModal>
+
       <CCardHeader>
         <strong>Users</strong>
         <CNavbar expand="lg" colorScheme="light" className="bg-light">

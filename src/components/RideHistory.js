@@ -4,7 +4,6 @@ import { CForm, CCardHeader, CNavbar, CContainer } from '@coreui/react'
 import { getRideHistoryData } from 'src/utils/calloutHelper'
 import { DataTable, Pagination, NotificationAlert } from 'src/components'
 
-
 const columns = [
   {
     key: 'sno',
@@ -31,23 +30,17 @@ const columns = [
     label: 'Ride Distance',
     _props: { scope: 'col' },
   },
-  {
-    key: 'driverPhoneNumber',
-    label: 'Driver Phone Number',
-    _props: { scope: 'col' },
-  },
-  
 ]
 
 const RideHistory = (props) => {
   const [isDisplayAlert, setIsDisplayAlert] = useState(false)
   const [alertMessage, setAlertMessage] = useState('')
   const [alertcolor, setAlertcolor] = useState('')
-  const [rideHistoryData, setRideHistoryData] = useState('')
+  const [rideHistoryData, setRideHistoryData] = useState()
   const [tempRideHistoryData, setTempRideHistoryData] = useState()
   const [totalPages, setTotalPages] = useState()
   const [currentPage, setCurrentPage] = useState(1)
-  const [recordPerPage, setRecordPerPage] = useState(2)
+  const [recordPerPage, setRecordPerPage] = useState(5)
   const [startIndex, setStartIndex] = useState(0)
 
   useEffect(() => {
@@ -56,10 +49,26 @@ const RideHistory = (props) => {
 
   const getRideHistoryDriver = async () => {
     try {
-      let url = process.env.REACT_APP_URL + '/ride-history-driver/1111111100'
+      let url = process.env.REACT_APP_URL
+      if (props?.isDriverHistory) {
+        url += '/ride-history-driver/' + props?.phoneNumber
+        columns.push({
+          key: 'driverPhoneNumber',
+          label: 'Driver Phone Number',
+          _props: { scope: 'col' },
+        })
+      }
+      if (props?.isRiderHistory) {
+        url += '/ride-history-rider/' + props?.phoneNumber
+        columns.push({
+          key: 'riderPhoneNumber',
+          label: 'Rider Phone Number',
+          _props: { scope: 'col' },
+        })
+      }
+
       let response = await getRideHistoryData('GET', url)
-      console.log('getRideHistoryDriver>>>' + JSON.stringify(response))
-      if (response !== undefined) {
+      if (response !== undefined && response.hasOwnProperty('data')) {
         if (response.data.data) {
           setData(response.data.data)
         } else {
@@ -135,6 +144,8 @@ const RideHistory = (props) => {
 }
 RideHistory.propTypes = {
   phoneNumber: PropTypes.string,
+  isDriverHistory: PropTypes.bool,
+  isRiderHistory: PropTypes.bool,
 }
 
 export default React.memo(RideHistory)
