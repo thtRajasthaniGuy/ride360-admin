@@ -4,7 +4,7 @@ import { CForm, CCardHeader, CNavbar, CContainer } from '@coreui/react'
 import { getRideHistoryData } from 'src/utils/calloutHelper'
 import { DataTable, Pagination, NotificationAlert } from 'src/components'
 
-const columns = [
+/*const columns = [
   {
     key: 'sno',
     label: 'S.No.',
@@ -30,7 +30,7 @@ const columns = [
     label: 'Ride Distance',
     _props: { scope: 'col' },
   },
-]
+]*/
 
 const RideHistory = (props) => {
   const [isDisplayAlert, setIsDisplayAlert] = useState(false)
@@ -42,6 +42,7 @@ const RideHistory = (props) => {
   const [currentPage, setCurrentPage] = useState(1)
   const [recordPerPage, setRecordPerPage] = useState(5)
   const [startIndex, setStartIndex] = useState(0)
+  const [columns, setColumns] = useState()
 
   useEffect(() => {
     getRideHistoryDriver()
@@ -52,19 +53,87 @@ const RideHistory = (props) => {
       let url = process.env.REACT_APP_URL
       if (props?.isDriverHistory) {
         url += '/ride-history-driver/' + props?.phoneNumber
-        columns.push({
-          key: 'driverPhoneNumber',
-          label: 'Driver Phone Number',
-          _props: { scope: 'col' },
-        })
+        let columns = [
+          {
+            key: 'sno',
+            label: 'S.No.',
+            _props: { scope: 'col' },
+          },
+          {
+            key: 'ridePickUpAddress',
+            label: 'Ride PickUp Address',
+            _props: { scope: 'col' },
+          },
+          {
+            key: 'rideDropUpAddress',
+            label: 'Ride DropUp Address',
+            _props: { scope: 'col' },
+          },
+          {
+            key: 'rideCharges',
+            label: 'Ride Charges',
+            _props: { scope: 'col' },
+          },
+          {
+            key: 'rideDistance',
+            label: 'Ride Distance',
+            _props: { scope: 'col' },
+          },
+          {
+            key: 'driverPhoneNumber',
+            label: 'Driver Phone Number',
+            _props: { scope: 'col' },
+          }
+        ]
+        setColumns(columns)
+        /*columns.push({
+            key: 'driverPhoneNumber',
+            label: 'Driver Phone Number',
+            _props: { scope: 'col' },
+          })*/    
       }
       if (props?.isRiderHistory) {
         url += '/ride-history-rider/' + props?.phoneNumber
-        columns.push({
-          key: 'riderPhoneNumber',
-          label: 'Rider Phone Number',
-          _props: { scope: 'col' },
-        })
+        let columns = [
+          {
+            key: 'sno',
+            label: 'S.No.',
+            _props: { scope: 'col' },
+          },
+          {
+            key: 'ridePickUpAddress',
+            label: 'Ride PickUp Address',
+            _props: { scope: 'col' },
+          },
+          {
+            key: 'rideDropUpAddress',
+            label: 'Ride DropUp Address',
+            _props: { scope: 'col' },
+          },
+          {
+            key: 'rideCharges',
+            label: 'Ride Charges',
+            _props: { scope: 'col' },
+          },
+          {
+            key: 'rideDistance',
+            label: 'Ride Distance',
+            _props: { scope: 'col' },
+          },
+          {
+            key: 'riderPhoneNumber',
+            label: 'Rider Phone Number',
+            _props: { scope: 'col' },
+          }
+        ]
+        setColumns(columns)
+        /*
+          columns.push({
+            key: 'riderPhoneNumber',
+            label: 'Rider Phone Number',
+            _props: { scope: 'col' },
+          } */
+       
       }
 
       let response = await getRideHistoryData('GET', url)
