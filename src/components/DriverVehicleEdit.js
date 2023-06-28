@@ -30,15 +30,23 @@ const DriverVehicleEdit = (props) => {
   }, [])
 
   const getDriverVehicleDetails = async () => {
-    var url = process.env.REACT_APP_URL + '/admin-driver-vehicle-list/' + props.driverId
-    let response = await getDriverVehicleData('GET', url)
-    if (response !== undefined && response.data.data) {
-      setData(response.data.data[0])
-    } else {
+    try {
+      var url = process.env.REACT_APP_URL + '/admin-driver-vehicle-list/' + props.driverId
+      let response = await getDriverVehicleData('GET', url)
+      if (response !== undefined && response.data.data) {
+        setData(response.data.data[0])
+      } else {
+        setIsDisplayAlert(true)
+        setAlertMessage(response.data.msg)
+        setAlertcolor('warning')
+      }
+
+    } catch (error) {
       setIsDisplayAlert(true)
-      setAlertMessage(response.data.msg)
+      setAlertMessage(error)
       setAlertcolor('warning')
     }
+
   }
 
   const setData = (record) => {
@@ -154,17 +162,28 @@ const DriverVehicleEdit = (props) => {
         'Content-Type': 'multipart/form-data;',
       }
 
-      let url = process.env.REACT_APP_URL + '/admin-driver-vehicle-update'
+      try {
+        let url = process.env.REACT_APP_URL + '/admin-driver-vehicle-update'
+        let response = await updateDriverVehicleData('PUT', url, formData)
+        if (response !== undefined && response.data) {
+          setIsDisplayAlert(true)
+          setAlertMessage(response.data.msg)
+          setAlertcolor('success')
+          setTimeout(() => {
+            props.closePopup(false)
+          }, 2000)
+        }else if (response.hasOwnProperty('message')) {
+          setIsDisplayAlert(true)
+          setAlertMessage(response.message)
+          setAlertcolor('warning')
+        }
 
-      let response = await updateDriverVehicleData('PUT', url, formData)
-      if (response !== undefined) {
+      } catch (error) {
         setIsDisplayAlert(true)
-        setAlertMessage(response.data.msg)
-        setAlertcolor('success')
-        setTimeout(() => {
-          props.closePopup(false)
-        }, 2000)
+        setAlertMessage(error)
+        setAlertcolor('warning')
       }
+
     } else {
       document.getElementById('onOkClick').style.display = 'none'
       document.getElementById('onCancleClick').style.display = 'none'

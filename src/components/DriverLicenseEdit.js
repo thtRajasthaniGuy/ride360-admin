@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { PropTypes } from 'prop-types'
-import axios from 'axios'
 import { CCol, CRow, CCard, CCardBody, CFormInput, CButton } from '@coreui/react'
 import { getDriverLicenseData, updateDriverLicenseData } from 'src/utils/calloutHelper'
-import { CToast, CToastBody, CToastClose } from '@coreui/react'
 import { NotificationAlert } from 'src/components'
 
 const DriverLicenseEdit = (props) => {
@@ -29,15 +27,24 @@ const DriverLicenseEdit = (props) => {
   }, [])
 
   const getDriverVehicleDetails = async () => {
-    var url = process.env.REACT_APP_URL + '/admin-driver-license-list/' + props.driverId
-    let response = await getDriverLicenseData('GET', url)
-    if (response !== undefined && response.data.data) {
-      setData(response.data.data[0])
-    } else {
+    try {
+      var url = process.env.REACT_APP_URL + '/admin-driver-license-list/' + props.driverId
+      let response = await getDriverLicenseData('GET', url)
+      if (response !== undefined && response.data.data) {
+        setData(response.data.data[0])
+      } else {
+        setIsDisplayAlert(true)
+        setAlertMessage(response.data.msg)
+        setAlertcolor('warning')
+      }
+    } catch (error) {
+      console.log('getDriverVehicleDetails error :::====>>' + error)
+      setDriverLicenseData('')
       setIsDisplayAlert(true)
-      setAlertMessage(response.data.msg)
+      setAlertMessage(error)
       setAlertcolor('warning')
     }
+
   }
 
   const setData = (record) => {
@@ -120,9 +127,6 @@ const DriverLicenseEdit = (props) => {
       if (insuranceExpirationDate !== '') {
         formData.append('insuranceExpirationDate', insuranceExpirationDate)
       }
-      console.log(licenseFrontImage)
-      console.log(licenseFrontImageURL)
-
       if (licenseFrontImage !== '') {
         formData.append('licenseFrontImage', licenseFrontImage.image_file)
       } else if (licenseFrontImageURL !== '') {
@@ -144,16 +148,27 @@ const DriverLicenseEdit = (props) => {
         formData.append('insuranceImageURL', insuranceImageURL)
       }
 
-      let url = process.env.REACT_APP_URL + '/admin-driver-license-update'
+      try {
+        let url = process.env.REACT_APP_URL + '/admin-driver-license-update'
+        let response = await updateDriverLicenseData('PUT', url, formData)
+        if (response !== undefined && response.data) {
+          setIsDisplayAlert(true)
+          setAlertMessage(response.data.msg)
+          setAlertcolor('success')
+          setTimeout(() => {
+            props.closePopup(false)
+          }, 2000)
+        }else if (response.hasOwnProperty('message')) {
+          setIsDisplayAlert(true)
+          setAlertMessage(response.message)
+          setAlertcolor('warning')
+        }
 
-      let response = await updateDriverLicenseData('PUT', url, formData)
-      if (response !== undefined) {
+      } catch (error) {
+        console.log('onUpdateLicenseDetailsClick error :::====>>' + error)
         setIsDisplayAlert(true)
-        setAlertMessage(response.data.msg)
-        setAlertcolor('success')
-        setTimeout(() => {
-          props.closePopup(false)
-        }, 2000)
+        setAlertMessage(error)
+        setAlertcolor('warning')
       }
     } else {
       document.getElementById('onOkClick').style.display = 'none'

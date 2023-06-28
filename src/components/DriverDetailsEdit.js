@@ -63,10 +63,8 @@ const DriverDetailsEdit = (props) => {
       document.getElementById('onCancleClick').style.display = 'none'
 
       if (props.isAccountApprove) {
-        console.log('if isAccountApprove' + props.isAccountApprove)
         updateAccountStatus()
       } else {
-        console.log('else isAccountApprove' + props.isAccountApprove)
 
         let formData = new FormData()
         formData.append('phoneNumber', props.selectedRowData.phoneNumber)
@@ -80,18 +78,31 @@ const DriverDetailsEdit = (props) => {
           formData.append('dob', driverDob)
         }
 
-        let url = process.env.REACT_APP_URL + '/admin-driver-basic-update'
-        let response = await driverBasicUpdate('PUT', url, formData)
+        try {
+          let url = process.env.REACT_APP_URL + '/admin-driver-basic-update'
+          let response = await driverBasicUpdate('PUT', url, formData)
 
-        if (response !== undefined) {
+          if (response !== undefined && response.data) {
+            setIsDisplayAlert(true)
+            setAlertMessage(response.data.msg)
+            setAlertcolor('success')
+            props.onRefresh()
+            setTimeout(() => {
+              props.closePopup(false)
+            }, 2000)
+          }else if (response.hasOwnProperty('message')) {
+            setIsDisplayAlert(true)
+            setAlertMessage(response.message)
+            setAlertcolor('warning')
+          }
+
+        } catch (error) {
+          console.log('onUpdateDetailsClick error :::====>>' + error)
           setIsDisplayAlert(true)
-          setAlertMessage(response.data.msg)
-          setAlertcolor('success')
-          props.onRefresh()
-          setTimeout(() => {
-            props.closePopup(false)
-          }, 2000)
+          setAlertMessage(error)
+          setAlertcolor('warning')
         }
+
       }
     } else {
       document.getElementById('onOkClick').style.display = 'none'
@@ -107,16 +118,29 @@ const DriverDetailsEdit = (props) => {
       accountStatus: accountStatus,
     }
 
-    let response = await updateDriverAccountStatus('POST', url, payload)
-    if (response !== undefined && response.status) {
+    try {
+      let response = await updateDriverAccountStatus('POST', url, payload)
+      if (response !== undefined && response.status) {
+        setIsDisplayAlert(true)
+        setAlertMessage('Driver Account ' + response.data.msg)
+        setAlertcolor('success')
+        props.onRefresh()
+        setTimeout(() => {
+          props.closePopup(false)
+        }, 2000)
+      }else if (response.hasOwnProperty('message')) {
+        setIsDisplayAlert(true)
+        setAlertMessage(response.message)
+        setAlertcolor('warning')
+      }
+
+    } catch (error) {
+      console.log('updateAccountStatus error :::====>>' + error)
       setIsDisplayAlert(true)
-      setAlertMessage('Driver Account ' + response.data.msg)
-      setAlertcolor('success')
-      props.onRefresh()
-      setTimeout(() => {
-        props.closePopup(false)
-      }, 2000)
+      setAlertMessage(error)
+      setAlertcolor('warning')
     }
+
   }
 
   return (
