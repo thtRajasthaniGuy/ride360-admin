@@ -80,7 +80,6 @@ const Driver = () => {
   const [openRideHistoryPopup, setRideHistoryPopup] = useState(false)
 
   useEffect(() => {
-    console.log('process.env.REACT_APP_URL' + process.env.REACT_APP_URL)
     getDrivers()
   }, [refreshCmpData])
 
