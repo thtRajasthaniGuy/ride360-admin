@@ -4,7 +4,7 @@ import { CForm, CFormInput, CButton, CFormSelect, CCol, CModalFooter } from '@co
 import { CModal, CModalHeader, CModalTitle, CModalBody, CRow, CFormLabel } from '@coreui/react'
 import axios from 'axios'
 import { DataTable, NotificationAlert } from 'src/components'
-import { Pagination ,RideHistory } from 'src/components'
+import { Pagination, RideHistory } from 'src/components'
 import { getRidersData } from 'src/utils/calloutHelper'
 
 const columns = [
@@ -155,7 +155,6 @@ const Rider = () => {
     setSelectedRowData(obj)
     setRideHistoryPopup(true)
   }
-  
 
   const onSearchChange = (event) => {
     if (event.target.id === 'nameInput') {

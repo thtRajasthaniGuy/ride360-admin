@@ -83,14 +83,14 @@ const RideHistory = (props) => {
             key: 'driverPhoneNumber',
             label: 'Driver Phone Number',
             _props: { scope: 'col' },
-          }
+          },
         ]
         setColumns(columns)
         /*columns.push({
             key: 'driverPhoneNumber',
             label: 'Driver Phone Number',
             _props: { scope: 'col' },
-          })*/    
+          })*/
       }
       if (props?.isRiderHistory) {
         url += '/ride-history-rider/' + props?.phoneNumber
@@ -124,7 +124,7 @@ const RideHistory = (props) => {
             key: 'riderPhoneNumber',
             label: 'Rider Phone Number',
             _props: { scope: 'col' },
-          }
+          },
         ]
         setColumns(columns)
         /*
@@ -133,7 +133,6 @@ const RideHistory = (props) => {
             label: 'Rider Phone Number',
             _props: { scope: 'col' },
           } */
-       
       }
 
       let response = await getRideHistoryData('GET', url)

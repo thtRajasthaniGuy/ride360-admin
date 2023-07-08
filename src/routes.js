@@ -111,7 +111,12 @@ const routes = [
   { path: '/rideFare/RideFare', name: 'Ride Fare', element: RideFare, exact: true },
   { path: '/riders/Riders', name: 'Riders', element: Riders, exact: true },
   { path: '/coupon/Coupon', name: 'Coupon', element: Coupon, exact: true },
-  { path: '/referralHistory/ReferralHistory', name: 'ReferralHistory', element: ReferralHistory, exact: true },
+  {
+    path: '/referralHistory/ReferralHistory',
+    name: 'ReferralHistory',
+    element: ReferralHistory,
+    exact: true,
+  },
 ]
 
 export default routes

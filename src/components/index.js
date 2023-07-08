@@ -41,5 +41,5 @@ export {
   EditViewCoupon,
   DriverApprove,
   NotificationAlert,
-  RideHistory
+  RideHistory,
 }

@@ -84,7 +84,7 @@ const AddRideFare = (props) => {
           props.closePopup(false)
           props.onRefresh()
         }, 2000)
-      }else if (response.hasOwnProperty('message')) {
+      } else if (response.hasOwnProperty('message')) {
         setIsDisplayAlert(true)
         setAlertMessage(response.message)
       }

@@ -40,13 +40,11 @@ const DriverVehicleEdit = (props) => {
         setAlertMessage(response.data.msg)
         setAlertcolor('warning')
       }
-
     } catch (error) {
       setIsDisplayAlert(true)
       setAlertMessage(error)
       setAlertcolor('warning')
     }
-
   }
 
   const setData = (record) => {
@@ -172,18 +170,16 @@ const DriverVehicleEdit = (props) => {
           setTimeout(() => {
             props.closePopup(false)
           }, 2000)
-        }else if (response.hasOwnProperty('message')) {
+        } else if (response.hasOwnProperty('message')) {
           setIsDisplayAlert(true)
           setAlertMessage(response.message)
           setAlertcolor('warning')
         }
-
       } catch (error) {
         setIsDisplayAlert(true)
         setAlertMessage(error)
         setAlertcolor('warning')
       }
-
     } else {
       document.getElementById('onOkClick').style.display = 'none'
       document.getElementById('onCancleClick').style.display = 'none'

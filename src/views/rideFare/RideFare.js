@@ -145,7 +145,6 @@ const RideFare = () => {
     setCitySearch('')
     setDisableButtonState(true)
     getRideFares()
-    
   }
   const onAddNewRideFareClick = () => {
     setOpenAddNewRideFarePopup(true)

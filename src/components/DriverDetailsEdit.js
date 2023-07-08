@@ -65,7 +65,6 @@ const DriverDetailsEdit = (props) => {
       if (props.isAccountApprove) {
         updateAccountStatus()
       } else {
-
         let formData = new FormData()
         formData.append('phoneNumber', props.selectedRowData.phoneNumber)
         if (driverName !== null) {
@@ -90,19 +89,17 @@ const DriverDetailsEdit = (props) => {
             setTimeout(() => {
               props.closePopup(false)
             }, 2000)
-          }else if (response.hasOwnProperty('message')) {
+          } else if (response.hasOwnProperty('message')) {
             setIsDisplayAlert(true)
             setAlertMessage(response.message)
             setAlertcolor('warning')
           }
-
         } catch (error) {
           console.log('onUpdateDetailsClick error :::====>>' + error)
           setIsDisplayAlert(true)
           setAlertMessage(error)
           setAlertcolor('warning')
         }
-
       }
     } else {
       document.getElementById('onOkClick').style.display = 'none'
@@ -128,19 +125,17 @@ const DriverDetailsEdit = (props) => {
         setTimeout(() => {
           props.closePopup(false)
         }, 2000)
-      }else if (response.hasOwnProperty('message')) {
+      } else if (response.hasOwnProperty('message')) {
         setIsDisplayAlert(true)
         setAlertMessage(response.message)
         setAlertcolor('warning')
       }
-
     } catch (error) {
       console.log('updateAccountStatus error :::====>>' + error)
       setIsDisplayAlert(true)
       setAlertMessage(error)
       setAlertcolor('warning')
     }
-
   }
 
   return (

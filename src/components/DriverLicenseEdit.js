@@ -44,7 +44,6 @@ const DriverLicenseEdit = (props) => {
       setAlertMessage(error)
       setAlertcolor('warning')
     }
-
   }
 
   const setData = (record) => {
@@ -158,12 +157,11 @@ const DriverLicenseEdit = (props) => {
           setTimeout(() => {
             props.closePopup(false)
           }, 2000)
-        }else if (response.hasOwnProperty('message')) {
+        } else if (response.hasOwnProperty('message')) {
           setIsDisplayAlert(true)
           setAlertMessage(response.message)
           setAlertcolor('warning')
         }
-
       } catch (error) {
         console.log('onUpdateLicenseDetailsClick error :::====>>' + error)
         setIsDisplayAlert(true)

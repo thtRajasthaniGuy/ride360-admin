@@ -289,10 +289,9 @@ const getInviteReferralHistoryData = async (method, url) => {
 }
 
 const getRideHistoryData = async (method, url, payload) => {
-
   const result = await axios({
     method: method,
-    url: url
+    url: url,
   })
     .then((response) => {
       console.log('getRideHistoryData response :::====>>' + JSON.stringify(response))
@@ -322,5 +321,5 @@ export {
   addRideFare,
   updateRideFaresData,
   getInviteReferralHistoryData,
-  getRideHistoryData
+  getRideHistoryData,
 }
