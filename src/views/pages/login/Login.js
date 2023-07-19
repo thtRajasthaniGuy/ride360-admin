@@ -1,5 +1,6 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
+import { PropTypes } from 'prop-types'
 import { Link } from 'react-router-dom'
 import {
   CButton,
@@ -17,10 +18,11 @@ import {
 import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser } from '@coreui/icons'
 
-const Login = () => {
+const Login = (props) => {
   const navigate = useNavigate()
 
   const handleloginClick = () => {
+    props.setAuth(true)
     navigate('/dashboard')
   }
 
@@ -72,6 +74,10 @@ const Login = () => {
       </CContainer>
     </div>
   )
+}
+
+Login.propTypes = {
+  setAuth: PropTypes.func,
 }
 
 export default Login
