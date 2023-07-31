@@ -84,6 +84,16 @@ const _nav = [
     to: '/referralHistory/ReferralHistory',
     icon: <CIcon icon={cilCarAlt} customClassName="nav-icon" />,
   },
+  {
+    component: CNavTitle,
+    name: 'Push Notification',
+  },
+  {
+    component: CNavItem,
+    name: 'Notification',
+    to: '/notifications/Notification',
+    icon: <CIcon icon={cilCarAlt} customClassName="nav-icon" />,
+  },
   /*{
     component: CNavTitle,
     name: 'Extras',

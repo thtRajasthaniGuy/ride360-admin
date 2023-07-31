@@ -8,6 +8,7 @@ const RideFare = React.lazy(() => import('./views/rideFare/RideFare'))
 const Coupon = React.lazy(() => import('./views/coupon/Coupon'))
 const Riders = React.lazy(() => import('./views/riders/Riders'))
 const ReferralHistory = React.lazy(() => import('./views/referralHistory/ReferralHistory'))
+const Notification = React.lazy(() => import('./views/notifications/Notification'))
 
 //const Booking = React.lazy(() => import('./views/bookings/Booking'))
 //const RentalPackages = React.lazy(() => import('./views/packages/Packages'))
@@ -117,6 +118,7 @@ const routes = [
     element: ReferralHistory,
     exact: true,
   },
+  { path: '/notifications/Notification', name: 'Notification', element: Notification, exact: true },
 ]
 
 export default routes
