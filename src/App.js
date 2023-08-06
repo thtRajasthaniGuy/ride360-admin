@@ -1,4 +1,4 @@
-import React, { Component, Suspense } from 'react'
+import React, { Suspense } from 'react'
 import { useState, useEffect } from 'react'
 import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom'
 
@@ -40,7 +40,7 @@ function App() {
             path="*"
             element={isAuthenticated ? <DefaultLayout /> : <Navigate to="/login" replace />}
           />
-          <Route path="/login" name="Login Page" element={<Login setAuth={setAuth} />} />
+          <Route path="/login" name="Login Page" element={<Login onSetAuth={setAuth} />} />
           <Route path="/register" name="Register Page" element={<Register />} />
           <Route path="/404" name="Page 404" element={<Page404 />} />
           <Route path="/500" name="Page 500" element={<Page500 />} />

@@ -1,25 +1,26 @@
 import { BsFillShieldLockFill, BsTelephoneFill } from 'react-icons/bs'
-import { CgSpinner } from 'react-icons/cg'
-
 import OtpInput from 'otp-input-react'
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
+import { PropTypes } from 'prop-types'
 import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
 import { auth } from 'src/firebase.config'
 import { RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth'
 import { toast, Toaster } from 'react-hot-toast'
+import { adminLogin } from 'src/utils/calloutHelper'
+import { CSpinner } from '@coreui/react'
 
-const Login = () => {
+const Login = (props) => {
+  const navigate = useNavigate()
   const [otp, setOtp] = useState('')
-  const [ph, setPh] = useState('')
+  const [phone, setPhone] = useState('')
   const [loading, setLoading] = useState(false)
   const [showOTP, setShowOTP] = useState(false)
-  const [user, setUser] = useState(null)
 
   function onCaptchVerify() {
     if (!window.recaptchaVerifier) {
-      console.log('window.recaptchaVerifier inside')
       try {
         window.recaptchaVerifier = new RecaptchaVerifier(
           auth,
@@ -27,8 +28,6 @@ const Login = () => {
           {
             size: 'invisible',
             callback: (response) => {
-              console.log('window.recaptchaVerifier response' + response)
-
               onSignup()
             },
             'expired-callback': () => {},
@@ -45,7 +44,7 @@ const Login = () => {
     setLoading(true)
     onCaptchVerify()
     const appVerifier = await window.recaptchaVerifier
-    const formatPh = '+' + ph
+    const formatPh = '+' + phone
 
     signInWithPhoneNumber(auth, formatPh, appVerifier)
       .then((confirmationResult) => {
@@ -57,6 +56,7 @@ const Login = () => {
       .catch((error) => {
         console.log(error)
         setLoading(false)
+        toast.success('OTP not sended successfully!')
       })
   }
 
@@ -65,15 +65,30 @@ const Login = () => {
     window.confirmationResult
       .confirm(otp)
       .then(async (res) => {
-        console.log('resresres::::::::::>' + JSON.stringify(res))
-        localStorage.setItem('auth', true)
-        setUser(res.user)
+        toast.success('OTP verify successfully!')
         setLoading(false)
+        adminLoginCall()
       })
       .catch((err) => {
         console.log(err)
+        toast.success('OTP not verify successfully!')
         setLoading(false)
       })
+  }
+
+  const adminLoginCall = async () => {
+    let phoneNumber = phone.substring(2)
+
+    let url = process.env.REACT_APP_URL + '/admin/login/' + phoneNumber
+    let response = await adminLogin('GET', url)
+    if (response !== undefined && response.status === 200) {
+      toast.success('Login successfully!')
+      props.onSetAuth(true)
+      localStorage.setItem('authData', JSON.stringify(response.data))
+      navigate('/dashboard')
+    } else {
+      toast.success('Login not successfully!')
+    }
   }
 
   return (
@@ -81,9 +96,7 @@ const Login = () => {
       <div className="justify-content-center">
         <Toaster toastOptions={{ duration: 4000 }} />
         <div id="recaptcha-container"></div>
-        {user ? (
-          <h2 className="text-center text-white font-medium text-2xl">👍Login Success</h2>
-        ) : (
+        {
           <div className="w-80 flex flex-col gap-4 rounded-lg p-4">
             <h1 className="text-center leading-normal text-white font-medium text-3xl mb-6">
               Welcome to <br /> Ride 360
@@ -92,7 +105,7 @@ const Login = () => {
               <>
                 <div className="card border-top-dark border-top-3 ">
                   <div className="card-body text-dark d-grid gap-2">
-                    <div className="bg-white p-2">
+                    <div className="bg-white p-2 mx-auto">
                       <BsFillShieldLockFill size={30} />
                     </div>
                     <div className="text-success d-flex justify-content-center">Enter your OTP</div>
@@ -106,7 +119,7 @@ const Login = () => {
                       className="opt-container "
                     ></OtpInput>
                     <button onClick={onOTPVerify} className="btn btn-success">
-                      {loading && <CgSpinner size={20} className="mt-1 animate-spin" />}
+                      {loading && <CSpinner color="dark" size="sm" />}
                       <span>Verify OTP</span>
                     </button>
                   </div>
@@ -116,15 +129,20 @@ const Login = () => {
               <>
                 <div className="card border-top-dark border-top-3 ">
                   <div className="card-body text-dark d-grid gap-2">
-                    <div className="bg-white p-2">
+                    <div className="bg-white p-2 mx-auto">
                       <BsTelephoneFill size={30} />
                     </div>
                     <div className="text-success d-flex justify-content-center">
                       Verify your phone number
                     </div>
-                    <PhoneInput country={'in'} value={ph} onChange={setPh} />
+                    <PhoneInput
+                      country={'in'}
+                      value={phone}
+                      onChange={setPhone}
+                      disableDropdown={true}
+                    />
                     <button onClick={onSignup} className="btn btn-success">
-                      {loading && <CgSpinner size={20} className="mt-1 animate-spin" />}
+                      {loading && <CSpinner color="dark" size="sm" />}
                       <span>Send code via SMS</span>
                     </button>
                   </div>
@@ -132,10 +150,13 @@ const Login = () => {
               </>
             )}
           </div>
-        )}
+        }
       </div>
     </section>
   )
+}
+Login.propTypes = {
+  onSetAuth: PropTypes.func,
 }
 
 export default Login

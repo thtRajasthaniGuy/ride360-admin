@@ -304,6 +304,22 @@ const getRideHistoryData = async (method, url, payload) => {
   return result
 }
 
+const adminLogin = async (method, url, payload) => {
+  const result = await axios({
+    method: method,
+    url: url,
+  })
+    .then((response) => {
+      console.log('adminLogin response :::====>>' + JSON.stringify(response))
+      return response
+    })
+    .catch((error) => {
+      console.log('adminLogin error :::====>>' + JSON.stringify(error))
+      return error
+    })
+  return result
+}
+
 export {
   getDriversData,
   getRideFaresData,
@@ -322,4 +338,5 @@ export {
   updateRideFaresData,
   getInviteReferralHistoryData,
   getRideHistoryData,
+  adminLogin,
 }
