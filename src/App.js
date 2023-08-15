@@ -40,8 +40,6 @@ function App() {
           />
           <Route path="/login" name="Login Page" element={<Login onSetAuth={setAuth} />} />
           <Route path="/register" name="Register Page" element={<Register />} />
-          <Route path="/404" name="Page 404" element={<Page404 />} />
-          <Route path="/500" name="Page 500" element={<Page500 />} />
         </Routes>
       </Suspense>
     </BrowserRouter>
