@@ -272,10 +272,13 @@ const updateDriverLicenseData = async (method, url, payload) => {
   return result
 }
 
-const getInviteReferralHistoryData = async (method, url) => {
+const getInviteReferralHistoryData = async (method, url, token) => {
   const result = await axios({
     method: method,
     url: url,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
   })
     .then((response) => {
       console.log('getInviteReferralHistoryData response :::====>>' + JSON.stringify(response))

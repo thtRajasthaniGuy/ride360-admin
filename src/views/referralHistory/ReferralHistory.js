@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { getInviteReferralHistoryData } from 'src/utils/calloutHelper'
 import { DataTable, NotificationAlert, Pagination } from 'src/components'
 import { CCardHeader, CNavbar, CContainer, CNavbarBrand, CModalTitle } from '@coreui/react'
+import { useNavigate } from 'react-router-dom'
 
 const columns = [
   {
@@ -36,6 +37,7 @@ const columns = [
   },
 ]
 const ReferralHistory = (props) => {
+  const navigate = useNavigate()
   const [referralHistoryData, setReferralHistoryData] = useState()
   const [tempReferralHistoryData, setTempReferralHistoryData] = useState()
   const [isDisplayAlert, setIsDisplayAlert] = useState(false)
@@ -54,10 +56,18 @@ const ReferralHistory = (props) => {
   const getInviteReferralHistorys = async () => {
     try {
       let url = process.env.REACT_APP_URL + '/invite-referral-history'
-      let response = await getInviteReferralHistoryData('GET', url)
+      //let url = '/api/v1/invite-referral-history'
+
+      let authData = JSON.parse(localStorage.getItem('authData'))
+      console.log('token??' + authData.token)
+
+      let response = await getInviteReferralHistoryData('GET', url, authData.token)
       console.log(JSON.stringify(response))
+      console.log(response.hasOwnProperty('message'))
+      console.log(response.hasOwnProperty('code'))
+      console.log(response.hasOwnProperty('status'))
       if (response != undefined && response.data) {
-        if (response.data.data) {
+        if (response.data.data.length > 0) {
           setData(response.data.data)
         } else {
           setIsDisplayAlert(true)
@@ -68,6 +78,8 @@ const ReferralHistory = (props) => {
         setIsDisplayAlert(true)
         setAlertMessage(response.message)
         setAlertcolor('warning')
+        //localStorage.setItem('auth', false)
+        navigate('/login')
       }
     } catch (error) {
       console.log('getInviteReferralHistorys error :::====>>' + error)
