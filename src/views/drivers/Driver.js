@@ -60,7 +60,7 @@ const Driver = () => {
   const [tempDriversData, setTempDriversData] = useState()
   const [totalPages, setTotalPages] = useState()
   const [currentPage, setCurrentPage] = useState(1)
-  const [recordPerPage, setRecordPerPage] = useState(2)
+  const [recordPerPage, setRecordPerPage] = useState(20)
   const [startIndex, setStartIndex] = useState(0)
   const [selectedRowData, setSelectedRowData] = useState()
   const [disableButton, setDisableButton] = useState(true)

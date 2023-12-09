@@ -40,7 +40,7 @@ const RideHistory = (props) => {
   const [tempRideHistoryData, setTempRideHistoryData] = useState()
   const [totalPages, setTotalPages] = useState()
   const [currentPage, setCurrentPage] = useState(1)
-  const [recordPerPage, setRecordPerPage] = useState(5)
+  const [recordPerPage, setRecordPerPage] = useState(20)
   const [startIndex, setStartIndex] = useState(0)
   const [columns, setColumns] = useState()
 
