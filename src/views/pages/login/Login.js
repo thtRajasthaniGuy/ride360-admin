@@ -19,62 +19,6 @@ const Login = (props) => {
   const [emailErrorMsg, setEmailErrorMsg] = useState('')
   const [passwordErrorMsg, setPasswordErrorMsg] = useState('')
 
-  /*function onCaptchVerify() {
-    if (!window.recaptchaVerifier) {
-      try {
-        window.recaptchaVerifier = new RecaptchaVerifier(
-          auth,
-          'recaptcha-container',
-          {
-            size: 'invisible',
-            callback: (response) => {
-              onSignup()
-            },
-            'expired-callback': () => {},
-          },
-          auth,
-        )
-      } catch (error) {
-        console.log('error' + error)
-      }
-    }
-  }
-
-  async function onSignup() {
-    setLoading(true)
-    onCaptchVerify()
-    const appVerifier = await window.recaptchaVerifier
-    const formatPh = '+' + phone
-
-    signInWithPhoneNumber(auth, formatPh, appVerifier)
-      .then((confirmationResult) => {
-        window.confirmationResult = confirmationResult
-        setLoading(false)
-        setShowOTP(true)
-        toast.success('OTP sended successfully!')
-      })
-      .catch((error) => {
-        console.log(error)
-        setLoading(false)
-        toast.success('OTP not sended successfully!')
-      })
-  }
-
-  function onOTPVerify() {
-    setLoading(true)
-    window.confirmationResult
-      .confirm(otp)
-      .then(async (res) => {
-        toast.success('OTP verify successfully!')
-        setLoading(false)
-        adminLoginCall()
-      })
-      .catch((err) => {
-        console.log(err)
-        toast.success('OTP not verify successfully!')
-        setLoading(false)
-      })
-  }*/
   const onAdminLoginDetailsChange = (event) => {
     if (event.target.id === 'password') {
       setAdminLoginPassword(event.target.value)
@@ -107,12 +51,13 @@ const Login = (props) => {
       formData.append('password', adminLoginPassword)
       let url = process.env.REACT_APP_URL + '/admin/login'
       let response = await adminLogin('POST', url, formData)
-      console.log('response......', JSON.stringify(response))
-      if (response) {
+      if (response && response.data && response.data.msg === 'user found') {
         toast.success('Login successfully!')
         props.onSetAuth(true)
         localStorage.setItem('authData', JSON.stringify(response.data))
         navigate('/dashboard')
+      } else if (response && response.data && response.data.msg === 'user not found') {
+        toast.success(response.data.msg)
       } else {
         toast.success('Login not successfully!')
       }
@@ -154,11 +99,13 @@ const Login = (props) => {
                   ) : (
                     <TextField
                       error
-                      id="emailError"
+                      id="email"
                       label="Email"
                       size="small"
                       fullWidth
                       helperText={emailErrorMsg}
+                      value={adminLoginEmail}
+                      onChange={onAdminLoginDetailsChange}
                     />
                   )}
                   {!passwordError ? (
@@ -174,15 +121,17 @@ const Login = (props) => {
                   ) : (
                     <TextField
                       error
-                      id="passwordError"
+                      id="password"
                       label="Password"
                       size="small"
                       fullWidth
                       helperText={passwordErrorMsg}
+                      value={adminLoginPassword}
+                      onChange={onAdminLoginDetailsChange}
                     />
                   )}
 
-                  <button onClick={adminLoginCall} className="btn btn-success">
+                  <button type="button" onClick={adminLoginCall} className="btn btn-success">
                     {loading && <CSpinner color="dark" size="sm" />}
                     <span>Login </span>
                   </button>
