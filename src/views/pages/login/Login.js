@@ -1,25 +1,25 @@
-import { BsFillShieldLockFill, BsTelephoneFill } from 'react-icons/bs'
-import OtpInput from 'otp-input-react'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import { PropTypes } from 'prop-types'
-import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
-import { auth } from 'src/firebase.config'
-import { RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth'
 import { toast, Toaster } from 'react-hot-toast'
 import { adminLogin } from 'src/utils/calloutHelper'
 import { CSpinner } from '@coreui/react'
+import TextField from '@mui/material/TextField'
+import Box from '@mui/material/Box'
 
 const Login = (props) => {
   const navigate = useNavigate()
-  const [otp, setOtp] = useState('')
-  const [phone, setPhone] = useState('')
+  const [adminLoginEmail, setAdminLoginEmail] = useState('')
+  const [adminLoginPassword, setAdminLoginPassword] = useState('')
   const [loading, setLoading] = useState(false)
-  const [showOTP, setShowOTP] = useState(false)
+  const [emailError, setEmailError] = useState(false)
+  const [passwordError, setPasswordError] = useState(false)
+  const [emailErrorMsg, setEmailErrorMsg] = useState('')
+  const [passwordErrorMsg, setPasswordErrorMsg] = useState('')
 
-  function onCaptchVerify() {
+  /*function onCaptchVerify() {
     if (!window.recaptchaVerifier) {
       try {
         window.recaptchaVerifier = new RecaptchaVerifier(
@@ -74,82 +74,122 @@ const Login = (props) => {
         toast.success('OTP not verify successfully!')
         setLoading(false)
       })
+  }*/
+  const onAdminLoginDetailsChange = (event) => {
+    if (event.target.id === 'password') {
+      setAdminLoginPassword(event.target.value)
+      setPasswordError(false)
+    } else if (event.target.id === 'email') {
+      setAdminLoginEmail(event.target.value)
+      setEmailError(false)
+    }
   }
 
   const adminLoginCall = async () => {
-    let phoneNumber = phone.substring(2)
-
-    let url = process.env.REACT_APP_URL + '/admin/login/' + phoneNumber
-    let response = await adminLogin('GET', url)
-    if (response !== undefined && response.status === 200) {
-      toast.success('Login successfully!')
-      props.onSetAuth(true)
-      localStorage.setItem('authData', JSON.stringify(response.data))
-      navigate('/dashboard')
-    } else {
+    setLoading(true)
+    if (!adminLoginEmail && !adminLoginPassword) {
       toast.success('Login not successfully!')
+      setEmailError(true)
+      setPasswordError(true)
+      setEmailErrorMsg('Email is required to login.')
+      setPasswordErrorMsg('Password is required to login.')
+    } else if (!adminLoginEmail) {
+      toast.success('Login not successfully!')
+      setEmailError(true)
+      setEmailErrorMsg('Email is required to login.')
+    } else if (!adminLoginPassword) {
+      toast.success('Login not successfully!')
+      setPasswordError(true)
+      setPasswordErrorMsg('Password is required to login.')
+    } else if (adminLoginEmail && adminLoginPassword) {
+      let formData = new FormData()
+      formData.append('email', adminLoginEmail)
+      formData.append('password', adminLoginPassword)
+      let url = process.env.REACT_APP_URL + '/admin/login'
+      let response = await adminLogin('POST', url, formData)
+      console.log('response......', JSON.stringify(response))
+      if (response) {
+        toast.success('Login successfully!')
+        props.onSetAuth(true)
+        localStorage.setItem('authData', JSON.stringify(response.data))
+        navigate('/dashboard')
+      } else {
+        toast.success('Login not successfully!')
+      }
     }
+    setLoading(false)
   }
 
   return (
     <section className="bg-dark min-vh-100 d-flex justify-content-center ">
       <div className="justify-content-center">
         <Toaster toastOptions={{ duration: 4000 }} />
-        <div id="recaptcha-container"></div>
         {
-          <div className="w-80 flex flex-col gap-4 rounded-lg p-4">
-            <h1 className="text-center leading-normal text-white font-medium text-3xl mb-6">
-              Welcome to <br /> Ride 360
-            </h1>
-            {showOTP ? (
-              <>
-                <div className="card border-top-dark border-top-3 ">
-                  <div className="card-body text-dark d-grid gap-2">
-                    <div className="bg-white p-2 mx-auto">
-                      <BsFillShieldLockFill size={30} />
-                    </div>
-                    <div className="text-success d-flex justify-content-center">Enter your OTP</div>
-                    <OtpInput
-                      value={otp}
-                      onChange={setOtp}
-                      OTPLength={6}
-                      otpType="number"
-                      disabled={false}
-                      autoFocus
-                      className="opt-container "
-                    ></OtpInput>
-                    <button onClick={onOTPVerify} className="btn btn-success">
-                      {loading && <CSpinner color="dark" size="sm" />}
-                      <span>Verify OTP</span>
-                    </button>
-                  </div>
-                </div>
-              </>
-            ) : (
-              <>
-                <div className="card border-top-dark border-top-3 ">
-                  <div className="card-body text-dark d-grid gap-2">
-                    <div className="bg-white p-2 mx-auto">
-                      <BsTelephoneFill size={30} />
-                    </div>
-                    <div className="text-success d-flex justify-content-center">
-                      Verify your phone number
-                    </div>
-                    <PhoneInput
-                      country={'in'}
-                      value={phone}
-                      onChange={setPhone}
-                      disableDropdown={true}
+          <Box
+            component="form"
+            sx={{
+              width: 500,
+              height: 500,
+              borderRadius: 1,
+            }}
+            noValidate
+            autoComplete="off"
+          >
+            <div className="w-80 flex flex-col gap-4 rounded-lg p-4">
+              <h1 className="text-center leading-normal text-white font-medium text-3xl mb-6">
+                Welcome to <br /> Ride 360
+              </h1>
+              <div className="card border-top-dark border-top-3 ">
+                <div className="card-body text-dark d-grid gap-2">
+                  {!emailError ? (
+                    <TextField
+                      label="Email"
+                      id="email"
+                      size="small"
+                      fullWidth
+                      value={adminLoginEmail}
+                      onChange={onAdminLoginDetailsChange}
+                      required
                     />
-                    <button onClick={onSignup} className="btn btn-success">
-                      {loading && <CSpinner color="dark" size="sm" />}
-                      <span>Send code via SMS</span>
-                    </button>
-                  </div>
+                  ) : (
+                    <TextField
+                      error
+                      id="emailError"
+                      label="Email"
+                      size="small"
+                      fullWidth
+                      helperText={emailErrorMsg}
+                    />
+                  )}
+                  {!passwordError ? (
+                    <TextField
+                      label="Password"
+                      id="password"
+                      size="small"
+                      fullWidth
+                      value={adminLoginPassword}
+                      onChange={onAdminLoginDetailsChange}
+                      required
+                    />
+                  ) : (
+                    <TextField
+                      error
+                      id="passwordError"
+                      label="Password"
+                      size="small"
+                      fullWidth
+                      helperText={passwordErrorMsg}
+                    />
+                  )}
+
+                  <button onClick={adminLoginCall} className="btn btn-success">
+                    {loading && <CSpinner color="dark" size="sm" />}
+                    <span>Login </span>
+                  </button>
                 </div>
-              </>
-            )}
-          </div>
+              </div>
+            </div>
+          </Box>
         }
       </div>
     </section>

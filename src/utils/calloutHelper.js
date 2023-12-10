@@ -311,6 +311,10 @@ const adminLogin = async (method, url, payload) => {
   const result = await axios({
     method: method,
     url: url,
+    data: payload,
+    headers: {
+      'Content-type': 'multipart/form-data;',
+    },
   })
     .then((response) => {
       console.log('adminLogin response :::====>>' + JSON.stringify(response))
