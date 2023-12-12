@@ -176,7 +176,7 @@ const DriverLicenseEdit = (props) => {
 
   return (
     <div>
-      {driverLicenseData == '' || isDisplayAlert ? (
+      {driverLicenseData === '' || isDisplayAlert ? (
         <div>
           <NotificationAlert
             color={alertcolor}

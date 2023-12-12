@@ -282,7 +282,7 @@ const Driver = () => {
                 onChange={onSearchChange}
               />
               <CButton
-                type="submit"
+                type="button"
                 className="me-1"
                 color="primary"
                 variant="outline"
@@ -292,7 +292,7 @@ const Driver = () => {
                 Search
               </CButton>
               <CButton
-                type="submit"
+                type="button"
                 className="me-1"
                 color="primary"
                 variant="outline"
