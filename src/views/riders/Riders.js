@@ -51,7 +51,7 @@ const Rider = () => {
   const [emailSearch, setEmailSearch] = useState('')
   const [phoneSearch, setPhoneSearch] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
-  const [recordPerPage, setRecordPerPage] = useState(2)
+  const [recordPerPage, setRecordPerPage] = useState(20)
   const [startIndex, setStartIndex] = useState(0)
   const [ridersData, setRidersData] = useState()
   const [tempRidersData, setTempRidersData] = useState()
@@ -117,7 +117,7 @@ const Rider = () => {
       record._props = { color: colorTemp }
       record.action = (
         <CButton
-          type="submit"
+          type="button"
           className="me-2"
           color="primary"
           variant="outline"
@@ -128,7 +128,7 @@ const Rider = () => {
       )
       record.rideHistory = (
         <CButton
-          type="submit"
+          type="button"
           className="me-2"
           color="primary"
           variant="outline"
@@ -366,7 +366,7 @@ const Rider = () => {
                 onChange={onSearchChange}
               />
               <CButton
-                type="submit"
+                type="button"
                 className="me-1"
                 color="primary"
                 variant="outline"
@@ -376,7 +376,7 @@ const Rider = () => {
                 Search
               </CButton>
               <CButton
-                type="submit"
+                type="button"
                 className="me-1"
                 color="primary"
                 variant="outline"

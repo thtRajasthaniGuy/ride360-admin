@@ -92,7 +92,7 @@ const RideFare = () => {
       record.sno = count
       record.action = (
         <CButton
-          type="submit"
+          type="button"
           className="me-2"
           color="primary"
           variant="outline"
@@ -191,7 +191,7 @@ const RideFare = () => {
                 onChange={onSearchChange}
               />
               <CButton
-                type="submit"
+                type="button"
                 className="me-1"
                 color="primary"
                 variant="outline"
@@ -201,7 +201,7 @@ const RideFare = () => {
                 Search
               </CButton>
               <CButton
-                type="submit"
+                type="button"
                 className="me-1"
                 color="primary"
                 variant="outline"
@@ -212,7 +212,7 @@ const RideFare = () => {
               </CButton>
             </CForm>
             <CButton
-              type="submit"
+              type="button"
               className="btn btn-outline-success"
               color="primary"
               variant="outline"
