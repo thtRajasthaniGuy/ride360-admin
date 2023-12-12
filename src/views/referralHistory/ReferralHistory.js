@@ -66,7 +66,7 @@ const ReferralHistory = (props) => {
       console.log(response.hasOwnProperty('message'))
       console.log(response.hasOwnProperty('code'))
       console.log(response.hasOwnProperty('status'))
-      if (response != undefined && response.data) {
+      if (response !== undefined && response.data) {
         if (response.data.data.length > 0) {
           setData(response.data.data)
         } else {

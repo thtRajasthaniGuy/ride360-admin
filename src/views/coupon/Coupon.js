@@ -40,7 +40,7 @@ const Coupon = () => {
   const [tempCouponData, setTempCouponData] = useState()
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState()
-  const [recordPerPage, setRecordPerPage] = useState(5)
+  const [recordPerPage, setRecordPerPage] = useState(20)
   const [startIndex, setStartIndex] = useState(0)
   const [openAddCouponPopup, setOpenAddCouponPopup] = useState(false)
   const [openEditViewCouponPopup, setOpenEditViewCouponPopup] = useState(false)
@@ -149,7 +149,7 @@ const Coupon = () => {
                 //onChange={onSearchChange}
               />
               <CButton
-                type="submit"
+                type="button"
                 className="me-1"
                 color="primary"
                 variant="outline"
@@ -159,7 +159,7 @@ const Coupon = () => {
                 Search
               </CButton>
               <CButton
-                type="submit"
+                type="button"
                 className="me-1"
                 color="primary"
                 variant="outline"
@@ -170,7 +170,7 @@ const Coupon = () => {
               </CButton>
             </CForm>
             <CButton
-              type="submit"
+              type="button"
               className="btn btn-outline-success"
               color="primary"
               variant="outline"
