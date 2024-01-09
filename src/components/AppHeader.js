@@ -16,7 +16,8 @@ import { cilBell, cilEnvelopeOpen, cilList, cilMenu } from '@coreui/icons'
 
 import { AppBreadcrumb } from './index'
 import { AppHeaderDropdown } from './header/index'
-import { logo } from 'src/assets/brand/logo'
+import ride360logo from 'src/assets/images/ride360logo.png'
+
 
 const AppHeader = () => {
   const dispatch = useDispatch()
@@ -32,7 +33,14 @@ const AppHeader = () => {
           <CIcon icon={cilMenu} size="lg" />
         </CHeaderToggler>
         <CHeaderBrand className="mx-auto d-md-none" to="/">
-          <CIcon icon={logo} height={48} alt="Logo" />
+        <img
+          style={{ margin: '1px' }}
+          width={180}
+          height={70}
+          className="image"
+          src={ride360logo}
+          alt=""
+        />
         </CHeaderBrand>
         <CHeaderNav className="d-none d-md-flex me-auto">
           <CNavItem>
