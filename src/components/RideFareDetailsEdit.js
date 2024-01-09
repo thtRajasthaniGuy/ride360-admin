@@ -19,6 +19,18 @@ const RideFareDetailsEdit = (props) => {
   const [suvCarNightFare, setSuvCarNightFare] = useState(props.selectedRowData?.suvCarNightFare)
   const [miniCarFare, setMiniCarFare] = useState(props.selectedRowData?.miniCarFare)
   const [miniCarNightFare, setMiniCarNightFare] = useState(props.selectedRowData?.miniCarNightFare)
+
+  const [autoDayFare, setAutoDayFare] = useState(props.selectedRowData?.autoDayFare)
+  const [airpotSurcharge, setAirpotSurcharge] = useState(props.selectedRowData?.airpotSurcharge)
+  const [serviceTax, setServiceTax] = useState(props.selectedRowData?.serviceTax)
+  const [baseFareKm, setBaseFareKm] = useState(props.selectedRowData?.baseFareKm)
+  const [autoBaseFare, setAutoBaseFare] = useState(props.selectedRowData?.autoBaseFare)
+  const [bikeBaseFare, setBikeBaseFare] = useState(props.selectedRowData?.bikeBaseFare)
+  const [miniBaseFare, setMiniBaseFare] = useState(props.selectedRowData?.miniBaseFare)
+  const [sedanBaseFare, setSedanBaseFare] = useState(props.selectedRowData?.sedanBaseFare)
+  const [suvBaseFare, setSuvBaseFare] = useState(props.selectedRowData?.suvBaseFare)
+
+  
   const [disableButton, setDisableButtonState] = useState(true)
   const [isDisplayAlert, setIsDisplayAlert] = useState(false)
   const [alertMessage, setAlertMessage] = useState('')
@@ -62,6 +74,43 @@ const RideFareDetailsEdit = (props) => {
       setMiniCarNightFare(event.target.value)
       selectedRowData.miniCarNightFare = event.target.value
     }
+
+    if (event.target.id === 'autoDayFare') {
+      setAutoDayFare(event.target.value)
+      selectedRowData.autoDayFare = event.target.value
+    }
+    if (event.target.id === 'airpotSurcharge') {
+      setAirpotSurcharge(event.target.value)
+      selectedRowData.airpotSurcharge = event.target.value
+    }
+    if (event.target.id === 'serviceTax') {
+      setServiceTax(event.target.value)
+      selectedRowData.serviceTax = event.target.value
+    }
+    if (event.target.id === 'baseFareKm') {
+      setBaseFareKm(event.target.value)
+      selectedRowData.baseFareKm = event.target.value
+    }
+    if (event.target.id === 'autoBaseFare') {
+      setAutoBaseFare(event.target.value)
+      selectedRowData.autoBaseFare = event.target.value
+    }
+    if (event.target.id === 'bikeBaseFare') {
+      setBikeBaseFare(event.target.value)
+      selectedRowData.bikeBaseFare = event.target.value
+    }
+    if (event.target.id === 'miniBaseFare') {
+      setMiniBaseFare(event.target.value)
+      selectedRowData.miniBaseFare = event.target.value
+    }
+    if (event.target.id === 'sedanBaseFare') {
+      setSedanBaseFare(event.target.value)
+      selectedRowData.sedanBaseFare = event.target.value
+    }
+    if (event.target.id === 'suvBaseFare') {
+      setSuvBaseFare(event.target.value)
+      selectedRowData.suvBaseFare = event.target.value
+    }
   }
 
   const onUpdateDetailsClick = async () => {
@@ -82,6 +131,16 @@ const RideFareDetailsEdit = (props) => {
       formData.append('suvCarNightFare', suvCarNightFare)
       formData.append('miniCarFare', miniCarFare)
       formData.append('miniCarNightFare', miniCarNightFare)
+      formData.append('autoDayFare', autoDayFare)
+      formData.append('airpotSurcharge', airpotSurcharge)
+      formData.append('serviceTax', serviceTax)
+      formData.append('baseFareKm', baseFareKm)
+      formData.append('autoBaseFare', autoBaseFare)
+      formData.append('bikeBaseFare', bikeBaseFare)
+      formData.append('miniBaseFare', miniBaseFare)
+      formData.append('sedanBaseFare', sedanBaseFare)
+      formData.append('suvBaseFare', suvBaseFare)
+      
 
       let url = process.env.REACT_APP_URL + '/ride-fare-update'
 
@@ -153,6 +212,15 @@ const RideFareDetailsEdit = (props) => {
           <CCol sm={6}>
             <CFormInput
               type="number"
+              id="autoDayFare"
+              label="Auto Day Fare"
+              value={autoDayFare}
+              onChange={onRideFareChange}
+            />
+          </CCol>
+          <CCol sm={6}>
+            <CFormInput
+              type="number"
               id="autoNightFare"
               label="Auto Night Fare"
               value={autoNightFare}
@@ -210,6 +278,80 @@ const RideFareDetailsEdit = (props) => {
               id="miniCarNightFare"
               label="Mini Car Night Fare"
               value={miniCarNightFare}
+              onChange={onRideFareChange}
+            />
+          </CCol>
+
+          <CCol sm={6}>
+            <CFormInput
+              type="number"
+              id="airpotSurcharge"
+              label="Airpot Surcharge"
+              value={airpotSurcharge}
+              onChange={onRideFareChange}
+            />
+          </CCol>
+          <CCol sm={6}>
+            <CFormInput
+              type="number"
+              id="serviceTax"
+              label="Service Tax"
+              value={serviceTax}
+              onChange={onRideFareChange}
+            />
+          </CCol>
+          <CCol sm={6}>
+            <CFormInput
+              type="number"
+              id="baseFareKm"
+              label="Base Fare Km"
+              value={baseFareKm}
+              onChange={onRideFareChange}
+            />
+          </CCol>
+         
+          <CCol sm={6}>
+            <CFormInput
+              type="number"
+              id="autoBaseFare"
+              label="Auto Base Fare"
+              value={autoBaseFare}
+              onChange={onRideFareChange}
+            />
+          </CCol>
+          <CCol sm={6}>
+            <CFormInput
+              type="number"
+              id="bikeBaseFare"
+              label="Bike Base Fare"
+              value={bikeBaseFare}
+              onChange={onRideFareChange}
+            />
+          </CCol>
+          <CCol sm={6}>
+            <CFormInput
+              type="number"
+              id="miniBaseFare"
+              label="Mini Base Fare"
+              value={miniBaseFare}
+              onChange={onRideFareChange}
+            />
+          </CCol>
+          <CCol sm={6}>
+            <CFormInput
+              type="number"
+              id="sedanBaseFare"
+              label="Sedan Base Fare"
+              value={sedanBaseFare}
+              onChange={onRideFareChange}
+            />
+          </CCol>
+          <CCol sm={6}>
+            <CFormInput
+              type="number"
+              id="suvBaseFare"
+              label="Suv Base Fare"
+              value={suvBaseFare}
               onChange={onRideFareChange}
             />
           </CCol>
